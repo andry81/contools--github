@@ -83,7 +83,10 @@ if not defined WORKFLOW_ID (
   exit /b 255
 ) >&2
 
-set CURL_BARE_FLAGS=-X PUT %CURL_BARE_FLAGS%
+set CURL_BARE_EXTERNAL_FLAGS=%CURL_BARE_FLAGS%
+set CURL_BARE_FLAGS=-X PUT
+
+if defined CURL_BARE_EXTERNAL_FLAGS set CURL_BARE_FLAGS=%CURL_BARE_FLAGS% %CURL_BARE_EXTERNAL_FLAGS%
 
 set "QUERY_TEMP_FILE=%SCRIPT_TEMP_CURRENT_DIR%\query.txt"
 
@@ -104,7 +107,7 @@ set "CURL_OUTPUT_FILE=%GH_REPOS_WORKFLOW_TEMP_DIR%/%GH_RESTAPI_USER_REPO_ENABLE_
 
 call set "CURL_OUTPUT_FILE=%%CURL_OUTPUT_FILE:{{PAGE}}=%PAGE%%%"
 
-call :CURL "%%GH_RESTAPI_USER_REPO_ENABLE_WORKFLOW_URL_PATH%%" || goto MAIN_EXIT
+call "%%CONTOOLS_GITHUB_PROJECT_ROOT%%/tools/curl.bat" "%%GH_AUTH_USER%%" "%%GH_AUTH_WORKFLOW_WRITE_PASS%%" "%%GH_RESTAPI_USER_REPO_ENABLE_WORKFLOW_URL_PATH%%" || goto MAIN_EXIT
 echo.
 
 "%JQ_EXECUTABLE%" "length" "%CURL_OUTPUT_FILE%" 2>nul > "%QUERY_TEMP_FILE%"
@@ -117,7 +120,7 @@ if "%QUERY_LEN%" == "null" set QUERY_LEN=0
 
 if %QUERY_LEN% EQU 0 (
   echo.%?~nx0%: warning: query response is empty.
-  goto SKIP_ARCHIVE
+  exit /b 255
 ) >&2
 
 echo.Archiving backup directory...
@@ -125,7 +128,7 @@ call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_REPOS_WORKFLOW_
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_ADAPTOR_WORKFLOW_TEMP_DIR%%" "*" "%%GH_REPOS_WORKFLOW_DIR%%/repo-enable-workflow--[%%OWNER%%][%%REPO%%][%%WORKFLOW_ID%%]--%%PROJECT_LOG_FILE_NAME_DATE_TIME%%.7z" -sdel || exit /b 20
 echo.
 
-:SKIP_ARCHIVE
+exit /b 0
 
 :MAIN_EXIT
 set LAST_ERROR=%ERRORLEVEL%
@@ -133,19 +136,3 @@ set LAST_ERROR=%ERRORLEVEL%
 echo.
 
 exit /b %LAST_ERROR%
-
-:CURL
-if defined GH_AUTH_USER if not "%GH_AUTH_USER%" == "{{USER}}" goto CURL_WITH_USER
-
-echo.^>%CURL_EXECUTABLE% %CURL_BARE_FLAGS% %*
-(
-  %CURL_EXECUTABLE% %CURL_BARE_FLAGS% %*
-) > "%CURL_OUTPUT_FILE%"
-exit /b
-
-:CURL_WITH_USER
-echo.^>%CURL_EXECUTABLE% %CURL_BARE_FLAGS% --user "%GH_AUTH_USER%:%GH_AUTH_WORKFLOW_WRITE_PASS%" %*
-(
-  %CURL_EXECUTABLE% %CURL_BARE_FLAGS% --user "%GH_AUTH_USER%:%GH_AUTH_WORKFLOW_WRITE_PASS%" %*
-) > "%CURL_OUTPUT_FILE%"
-exit /b

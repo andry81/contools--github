@@ -13,7 +13,7 @@ rem   -skip-sort
 rem     Skip repositories list alphabetic sort and print as is from the json
 rem     file.
 rem   -no-url-domain-remove
-rem     Don't remove url domain from the output.
+rem     Don't remove url domain (`https://github.com/`) from the output.
 
 setlocal
 
@@ -76,35 +76,32 @@ if not exist "%JSON_FILE%" (
   exit /b 255
 ) >&2
 
-if %FLAG_SKIP_SORT% EQU 0 goto SORT_LIST
+"%JQ_EXECUTABLE%" -c -r ".[].html_url" "%JSON_FILE%" > "%INOUT_LIST_FILE_TMP0%" || exit /b
 
-"%JQ_EXECUTABLE%" -c -r ".[].html_url" "%JSON_FILE%"
-exit /b
+set "INPUT_LIST_FILE=%INOUT_LIST_FILE_TMP0%"
 
-:SORT_LIST
-"%JQ_EXECUTABLE%" -c -r ".[].html_url" "%JSON_FILE%" > "%INOUT_LIST_FILE_TMP0%"
-set LAST_ERROR=%ERRORLEVEL%
-
-sort "%INOUT_LIST_FILE_TMP0%" /O "%INOUT_LIST_FILE_TMP1%"
+if %FLAG_SKIP_SORT% EQU 0 (
+  set "INPUT_LIST_FILE=%INOUT_LIST_FILE_TMP1%"
+  sort "%INOUT_LIST_FILE_TMP0%" /O "%INOUT_LIST_FILE_TMP1%"
+)
 
 if %FLAG_NO_URL_DOMAIN_REMOVE% NEQ 0 goto NO_URL_DOMAIN_REMOVE
 
-for /F "usebackq eol= tokens=* delims=" %%i in ("%INOUT_LIST_FILE_TMP1%") do (
-  set "URL=%%i"
+for /F "usebackq eol= tokens=* delims=" %%i in ("%INPUT_LIST_FILE%") do (
+  set "URL_PATH=%%i"
   call :PROCESS_URL
 ) >> "%INOUT_LIST_FILE_TMP2%"
 
 type "%INOUT_LIST_FILE_TMP2%"
 
-exit /b %LAST_ERROR%
+exit /b 0
 
 :PROCESS_URL
-set "URL=%URL:https:/=%"
-set "URL=%URL:/github.com/=%"
-echo.%URL%
+if "%URL_PATH:~0,19%" == "https://github.com/" set "URL_PATH=%URL_PATH:~19%"
+if defined URL_PATH setlocal ENABLEDELAYEDEXPANSION & for /F "eol= tokens=* delims=" %%i in ("!URL_PATH!") do endlocal & echo.%%i
 exit /b
 
 :NO_URL_DOMAIN_REMOVE
-type "%INOUT_LIST_FILE_TMP1%"
+type "%INPUT_LIST_FILE%"
 
-exit /b %LAST_ERROR%
+exit /b 0

@@ -4,8 +4,8 @@ rem USAGE:
 rem   backup_restapi_all_user_repos_list.bat [<Flags>] [--] [<cmd> [<param0> [<param1>]]]
 
 rem Description:
-rem   Script to request all restapi responses from all user accounts in
-rem   the user accounts file.
+rem   Script to request all restapi responses of repository lists from all user
+rem   accounts from the user accounts file.
 
 rem <Flags>:
 rem   --
@@ -94,7 +94,7 @@ if defined FROM_CMD (
 
 if %HAS_AUTH_USER% EQU 0 goto SKIP_AUTH_USER
 
-rem including private repos
+rem required authentication
 
 call "%%?~dp0%%.impl/update_skip_state.bat" "backup_restapi_auth_user_repos_list.bat" owner
 
@@ -113,7 +113,8 @@ if not defined SKIPPING_CMD (
 :SKIP_AUTH_USER
 :SKIP_AUTH_REPO_LIST
 
-rem including private repos if authentication is declared
+rem optional authentication
+
 for /F "usebackq eol=# tokens=* delims=" %%i in ("%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/accounts-user.lst") do (
   set "REPO_OWNER=%%i"
 

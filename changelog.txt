@@ -1,3 +1,9 @@
+2024.05.22:
+* fixed: scripts: print_all_repos_from_restapi_json.bat, print_source_repos_from_restapi_json.bat: minor fixup
+* new: scripts: backup_restapi_user_repo_workflows_list.bat, backup_restapi_all_user_repo_workflows_list.bat: repo workflows response backup scripts
+* new: scripts: print_all_repo_workflows_from_restapi_json.bat, print_inactive_repo_workflows_from_restapi_json.bat: repo workflows json response print scripts
+* changed: improvements and code cleanup
+
 2024.04.26:
 * changed: moved from `contools` project
 * changed: __init__, scripts: minor improvements and changes

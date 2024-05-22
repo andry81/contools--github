@@ -1,11 +1,11 @@
 @echo off
 
 rem USAGE:
-rem   backup_restapi_all_org_repos_list.bat [<Flags>] [--] [<cmd> [<param0> [<param1>]]]
+rem   backup_restapi_all_user_repo_workflows_list.bat [<Flags>] [--] [<cmd> [<param0> [<param1>]]]
 
 rem Description:
-rem   Script to request all restapi responses of repository lists from all
-rem   organization accounts from the user organization accounts file.
+rem   Script to request all restapi responses of repository workflow lists from
+rem   all user accounts from the user accounts file.
 
 rem <Flags>:
 rem   --
@@ -92,33 +92,37 @@ if defined FROM_CMD (
   set SKIPPING_CMD=1
 )
 
+if %HAS_AUTH_USER% EQU 0 goto SKIP_AUTH_USER
+
+rem required authentication
+
+for /F "usebackq eol=# tokens=1,* delims=/" %%i in ("%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/repos-auth-with-workflows.lst") do (
+  set "REPO_OWNER=%%i"
+  set "REPO=%%j"
+
+  call "%%?~dp0%%.impl/update_skip_state.bat" "backup_restapi_user_repo_workflows_list.bat" "%%REPO_OWNER%%" "%%REPO%%"
+
+  if not defined SKIPPING_CMD (
+    call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_user_repo_workflows_list.bat"%%BARE_FLAGS%% "%%REPO_OWNER%%" "%%REPO%%" || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
+    echo.---
+  ) else call echo.* backup_restapi_user_repo_workflows_list.bat "%%REPO_OWNER%%" "%%REPO%%"
+)
+
+:SKIP_AUTH_USER
 :SKIP_AUTH_REPO_LIST
 
 rem optional authentication
 
-for /F "usebackq eol=# tokens=* delims=" %%i in ("%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/accounts-org.lst") do (
+for /F "usebackq eol=# tokens=1,* delims=/" %%i in ("%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/repos-with-workflows.lst") do (
   set "REPO_OWNER=%%i"
+  set "REPO=%%j"
 
-  call "%%?~dp0%%.impl/update_skip_state.bat" "backup_restapi_org_repos_list.bat" "%%REPO_OWNER%%" sources
-
-  if not defined SKIPPING_CMD (
-    call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_org_repos_list.bat" "%%REPO_OWNER%%" sources || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
-    echo.---
-  ) else call echo.* backup_restapi_org_repos_list.bat "%%REPO_OWNER%%" sources
-
-  call "%%?~dp0%%.impl/update_skip_state.bat" "backup_restapi_org_repos_list.bat" "%%REPO_OWNER%%" all
+  call "%%?~dp0%%.impl/update_skip_state.bat" "backup_restapi_user_repo_workflows_list.bat" "%%REPO_OWNER%%" "%%REPO%%"
 
   if not defined SKIPPING_CMD (
-    call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_org_repos_list.bat" "%%REPO_OWNER%%" all || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
+    call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_user_repo_workflows_list.bat"%%BARE_FLAGS%% "%%REPO_OWNER%%" "%%REPO%%" || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
     echo.---
-  ) else call echo.* backup_restapi_org_repos_list.bat "%%REPO_OWNER%%" all
-
-  call "%%?~dp0%%.impl/update_skip_state.bat" "backup_restapi_starred_repos_list.bat" "%%REPO_OWNER%%"
-
-  if not defined SKIPPING_CMD (
-    call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_starred_repos_list.bat" "%%REPO_OWNER%%" || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
-    echo.---
-  ) else call echo.* backup_restapi_starred_repos_list.bat "%%REPO_OWNER%%"
+  ) else call echo.* backup_restapi_user_repo_workflows_list.bat "%%REPO_OWNER%%" "%%REPO%%"
 )
 
 exit /b 0

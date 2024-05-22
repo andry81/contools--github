@@ -39,6 +39,10 @@ GH_RESTAPI_ORG_REPOS_FILE         =repos-{{TYPE}}-{{PAGE}}.json
 GH_RESTAPI_USER_REPO_URL          =https://api.github.com/repos/{{OWNER}}/{{REPO}}
 GH_RESTAPI_USER_REPO_FILE         =repo-info-{{PAGE}}.json
 
+# to request repo workflows list
+GH_RESTAPI_USER_REPO_WORKFLOWS_URL  =https://api.github.com/repos/{{OWNER}}/{{REPO}}/actions/workflows
+GH_RESTAPI_USER_REPO_WORKFLOWS_FILE =repo-workflows-{{PAGE}}.json
+
 GH_RESTAPI_REPO_STARGAZERS_URL    =https://api.github.com/repos/{{OWNER}}/{{REPO}}/stargazers
 GH_RESTAPI_REPO_STARGAZERS_FILE   =stargazers-{{PAGE}}.json
 

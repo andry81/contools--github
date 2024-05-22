@@ -57,8 +57,13 @@ if %NO_GEN%0 EQU 0 (
 
   call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" accounts-user.lst || exit /b
   call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" accounts-org.lst || exit /b
+
   call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" repos.lst || exit /b
   call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" repos-auth.lst || exit /b
+
+  call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" repos-with-workflows.lst || exit /b
+  call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" repos-auth-with-workflows.lst || exit /b
+
   call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" repos-forks.lst || exit /b
 
   call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" repos-to-delete.lst || exit /b
@@ -67,7 +72,7 @@ if %NO_GEN%0 EQU 0 (
 ) else call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/load_config_dir.bat" %%* -- "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" || exit /b
 
 call "%%CONTOOLS_ROOT%%/std/if_var_defined_and_file_exist.bat" CURL_EXECUTABLE || (
-  echo.%~nx0: error: CURL_EXECUTABLE file path is not found: "%EMULE_EXECUTABLE%"
+  echo.%~nx0: error: CURL_EXECUTABLE file path is not found: "%CURL_EXECUTABLE%"
   exit /b 255
 ) >&2
 
