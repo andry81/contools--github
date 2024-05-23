@@ -1,7 +1,7 @@
 @echo off
 
 rem USAGE:
-rem   print_all_repo_workflows_from_restapi_json.bat.bat [<Flags>] [--] <JSON_FILE>
+rem   print_all_repo_workflows_from_restapi_json.bat [<Flags>] [--] <JSON_FILE>
 
 rem Description:
 rem   Script prints all repository workflows from the json file.

@@ -1,7 +1,7 @@
 @echo off
 
 rem USAGE:
-rem   print_source_repos_from_restapi_json.bat.bat [<Flags>] [--] <JSON_FILE>
+rem   print_source_repos_from_restapi_json.bat [<Flags>] [--] <JSON_FILE>
 
 rem Description:
 rem   Script prints source only repositories from the json file.

@@ -1,5 +1,5 @@
 * README_EN.txt
-* 2024.04.26
+* 2024.05.23
 * contools--github
 
 1. DESCRIPTION
@@ -69,9 +69,21 @@ Github local scripts to:
  |  |     |   #
  |  |     |   # Authenticated only user repositories list.
  |  |     |
+ |  |     +- `repos-auth-with-workflows.lst`
+ |  |     |   #
+ |  |     |   # Authenticated only user repositories with workflows list.
+ |  |     |
  |  |     +- `repos-forks.lst`
  |  |     |   #
  |  |     |   # User forked repositories list.
+ |  |     |
+ |  |     +- `repos-to-delete.lst`
+ |  |     |   #
+ |  |     |   # User repositories to delete.
+ |  |     |
+ |  |     +- `repos-with-workflows.lst`
+ |  |     |   #
+ |  |     |   # User repositories with workflows list.
  |  |     |
  |  |     +- `workflows.lst`
  |  |     |   #
@@ -91,10 +103,10 @@ Github local scripts to:
  |  |  |
  |  |  +- /`bare`
  |  |  |    #
- |  |  |    # Output directory for backup bare plus checkout
+ |  |  |    # Output directory for backup bare with or without checkout
  |  |  |    # repositories.
  |  |  |
- |  |  +- /`checkout`
+ |  |  +- /`checkouted`
  |  |  |    #
  |  |  |    # Output directory for backup only checkouted repositories.
  |  |  |
@@ -131,7 +143,9 @@ accounts-org.lst
 accounts-user.lst
 repos.lst
 repos-auth.lst
+repos-auth-with-workflows.lst
 repos-forks.lst
+repos-with-workflows.lst
 workflows.lst
 config.0.vars
 config.1.vars

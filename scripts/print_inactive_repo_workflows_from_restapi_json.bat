@@ -1,7 +1,7 @@
 @echo off
 
 rem USAGE:
-rem   print_inactive_repo_workflows_from_restapi_json.bat.bat [<Flags>] [--] <JSON_FILE>
+rem   print_inactive_repo_workflows_from_restapi_json.bat [<Flags>] [--] <JSON_FILE>
 
 rem Description:
 rem   Script prints inactive only repository workflows from the json file.

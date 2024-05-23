@@ -35,39 +35,14 @@ once GH_WORKFLOW_DIR                            ="%PROJECT_OUTPUT_ROOT%/workflow
 # subdirectories format: <owner>/<repo>
 once GH_BACKUP_BARE_REPO_DIR                    ="%GH_BACKUP_DIR%/bare/repo"
 once GH_BACKUP_CHECKOUTED_REPO_DIR              ="%GH_BACKUP_DIR%/checkouted/repo"
-
-once GH_BACKUP_CHECKOUTED_REPO_FILE_NAME        =checkouted-repo--[{{OWNER}}][{{REPO}}]--{{DATE_TIME}}
-once GH_BACKUP_CHECKOUTED_AUTH_REPO_FILE_NAME   =checkouted-auth-repo--[{{OWNER}}][{{REPO}}]--{{DATE_TIME}}
-
-once GH_BACKUP_BARE_REPO_FILE_NAME              =bare-repo--[{{OWNER}}][{{REPO}}]--{{DATE_TIME}}
-once GH_BACKUP_BARE_AUTH_REPO_FILE_NAME         =bare-auth-repo--[{{OWNER}}][{{REPO}}]--{{DATE_TIME}}
-
-once GH_BACKUP_BARED_CHECKOUT_REPO_FILE_NAME    =bared-checkout-repo--[{{OWNER}}][{{REPO}}]--{{DATE_TIME}}
-once GH_BACKUP_BARED_CHECKOUT_AUTH_REPO_FILE_NAME=bared-checkout-auth-repo--[{{OWNER}}][{{REPO}}]--{{DATE_TIME}}
-
-# subdirectories format: <owner>/<repo>
 once GH_BACKUP_RESTAPI_REPO_DIR                 ="%GH_BACKUP_DIR%/restapi/repo"
-
-once GH_BACKUP_RESTAPI_REPO_INFO_FILE_NAME      =repo-info--[{{OWNER}}][{{REPO}}]--{{DATE_TIME}}
-once GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE_NAME =repo-workflows--[{{OWNER}}][{{REPO}}]--{{DATE_TIME}}
-once GH_BACKUP_RESTAPI_REPO_RELEASES_FILE_NAME  =repo-releases--[{{OWNER}}][{{REPO}}]--{{DATE_TIME}}
-once GH_BACKUP_RESTAPI_REPO_STARGAZERS_FILE_NAME=repo-stargazers--[{{OWNER}}][{{REPO}}]--{{DATE_TIME}}
-once GH_BACKUP_RESTAPI_REPO_SUBSCRIBERS_FILE_NAME=repo-subscribers--[{{OWNER}}][{{REPO}}]--{{DATE_TIME}}
-once GH_BACKUP_RESTAPI_REPO_FORKS_FILE_NAME  =repo-forks--[{{OWNER}}][{{REPO}}]--{{DATE_TIME}}
 
 # subdirectories format: <user>
 once GH_BACKUP_RESTAPI_USER_REPOS_DIR           ="%GH_BACKUP_DIR%/restapi/repos/user"
-once GH_BACKUP_RESTAPI_USER_REPOS_FILE_NAME     =user-repos--[{{OWNER}}][{{TYPE}}]--{{DATE_TIME}}
-once GH_BACKUP_RESTAPI_AUTH_USER_REPOS_FILE_NAME=auth-user-repos--[{{OWNER}}][{{TYPE}}]--{{DATE_TIME}}
-
 once GH_BACKUP_RESTAPI_STARRED_REPOS_DIR        ="%GH_BACKUP_DIR%/restapi/repos/starred"
-once GH_BACKUP_RESTAPI_STARRED_REPOS_FILE_NAME  =starred-repos--[{{OWNER}}]--{{DATE_TIME}}
 
 # subdirectories format: <org>
 once GH_BACKUP_RESTAPI_ORG_REPOS_DIR            ="%GH_BACKUP_DIR%/restapi/repos/org"
-once GH_BACKUP_RESTAPI_ORG_REPOS_FILE_NAME      =org-repos--[{{ORG}}][{{TYPE}}]--{{DATE_TIME}}
-
-once GH_ENABLE_RESTAPI_REPO_WORKFLOW_FILE_NAME  =repo-enable-workflow--[{{OWNER}}][{{REPO}}][{{WORKFLOW_ID}}]--{{DATE_TIME}}
 
 # 100 is a maximum
 once GH_RESTAPI_PARAM_PER_PAGE                  =100
