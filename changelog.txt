@@ -1,3 +1,8 @@
+2024.05.23:
+* fixed: scripts: execution fixup
+* changed: improvements and preparations to be able to generate config files from backed up json files
+* refactor: global refactor
+
 2024.05.22:
 * fixed: scripts: print_all_repos_from_restapi_json.bat, print_source_repos_from_restapi_json.bat: minor fixup
 * new: scripts: backup_restapi_user_repo_workflows_list.bat, backup_restapi_all_user_repo_workflows_list.bat: repo workflows response backup scripts

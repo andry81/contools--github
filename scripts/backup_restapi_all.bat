@@ -199,12 +199,12 @@ for /F "usebackq eol=# tokens=1,* delims=/" %%i in (%REPO_LISTS%) do (
   set "REPO_OWNER=%%i"
   set "REPO=%%j"
 
-  call "%%?~dp0%%.impl/update_skip_state.bat" "backup_restapi_user_repo_info.bat" "%%REPO_OWNER%%" "%%REPO%%"
+  call "%%?~dp0%%.impl/update_skip_state.bat" "backup_restapi_repo_info.bat" "%%REPO_OWNER%%" "%%REPO%%"
 
   if not defined SKIPPING_CMD (
-    call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_user_repo_info.bat" "%%REPO_OWNER%%" "%%REPO%%" || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
+    call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_repo_info.bat" "%%REPO_OWNER%%" "%%REPO%%" || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
     echo.---
-  ) else call echo.* backup_restapi_user_repo_info.bat "%%REPO_OWNER%%" "%%REPO%%"
+  ) else call echo.* backup_restapi_repo_info.bat "%%REPO_OWNER%%" "%%REPO%%"
 
   if %FLAG_QUERY_REPO_INFO_ONLY% EQU 0 (
     call "%%?~dp0%%.impl/update_skip_state.bat" "backup_restapi_repo_stargazers_list.bat" "%%REPO_OWNER%%" "%%REPO%%"

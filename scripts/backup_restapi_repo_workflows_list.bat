@@ -1,11 +1,11 @@
 @echo off
 
 rem USAGE:
-rem   backup_restapi_user_repo_info.bat [<Flags>] [--] <OWNER> <REPO>
+rem   backup_restapi_repo_workflows_list.bat [<Flags>] [--] <OWNER> <REPO>
 
 rem Description:
-rem   Script to request restapi response of repository information (including
-rem   parent repository address) from a user repository.
+rem   Script to request restapi response of repository workflows list from a
+rem   user account.
 
 rem <Flags>:
 rem   --
@@ -74,26 +74,26 @@ if not defined REPO (
 
 set "QUERY_TEMP_FILE=%SCRIPT_TEMP_CURRENT_DIR%\query.txt"
 
-set "GH_ADAPTOR_BACKUP_TEMP_DIR=%SCRIPT_TEMP_CURRENT_DIR%\backup\restapi"
+set "GH_BACKUP_TEMP_DIR=%SCRIPT_TEMP_CURRENT_DIR%\backup\restapi"
 
-set "GH_REPOS_BACKUP_TEMP_DIR=%GH_ADAPTOR_BACKUP_TEMP_DIR%/repo/%OWNER%/%REPO%"
-set "GH_REPOS_BACKUP_DIR=%GH_ADAPTOR_BACKUP_DIR%/restapi/repo/%OWNER%/%REPO%"
+set "GH_BACKUP_OUTPUT_TEMP_DIR=%GH_BACKUP_TEMP_DIR%/repo/%OWNER%/%REPO%"
+set "GH_BACKUP_OUTPUT_DIR=%GH_BACKUP_RESTAPI_REPO_DIR%/%OWNER%/%REPO%"
 
-call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir.bat" "%%GH_REPOS_BACKUP_TEMP_DIR%%" >nul || exit /b 255
+call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir.bat" "%%GH_BACKUP_OUTPUT_TEMP_DIR%%" >nul || exit /b 255
 
 set PAGE=1
 
 :PAGE_LOOP
-call set "GH_RESTAPI_USER_REPO_URL_PATH=%%GH_RESTAPI_USER_REPO_URL:{{OWNER}}=%OWNER%%%"
-call set "GH_RESTAPI_USER_REPO_URL_PATH=%%GH_RESTAPI_USER_REPO_URL_PATH:{{REPO}}=%REPO%%%"
+call set "GH_RESTAPI_USER_REPO_WORKFLOWS_URL_PATH=%%GH_RESTAPI_USER_REPO_WORKFLOWS_URL:{{OWNER}}=%OWNER%%%"
+call set "GH_RESTAPI_USER_REPO_WORKFLOWS_URL_PATH=%%GH_RESTAPI_USER_REPO_WORKFLOWS_URL_PATH:{{REPO}}=%REPO%%%"
 
-set "GH_RESTAPI_USER_REPO_URL_PATH=%GH_RESTAPI_USER_REPO_URL_PATH%?per_page=%GH_RESTAPI_PARAM_PER_PAGE%&page=%PAGE%"
+set "GH_RESTAPI_USER_REPO_WORKFLOWS_URL_PATH=%GH_RESTAPI_USER_REPO_WORKFLOWS_URL_PATH%?per_page=%GH_RESTAPI_PARAM_PER_PAGE%&page=%PAGE%"
 
-set "CURL_OUTPUT_FILE=%GH_REPOS_BACKUP_TEMP_DIR%/%GH_RESTAPI_USER_REPO_FILE%"
+set "CURL_OUTPUT_FILE=%GH_BACKUP_OUTPUT_TEMP_DIR%/%GH_RESTAPI_USER_REPO_WORKFLOWS_FILE%"
 
 call set "CURL_OUTPUT_FILE=%%CURL_OUTPUT_FILE:{{PAGE}}=%PAGE%%%"
 
-call "%%CONTOOLS_GITHUB_PROJECT_ROOT%%/tools/curl.bat" "%%GH_AUTH_USER%%" "%%GH_AUTH_PASS%%" "%%GH_RESTAPI_USER_REPO_URL_PATH%%" || goto MAIN_EXIT
+call "%%CONTOOLS_GITHUB_PROJECT_ROOT%%/tools/curl.bat" "%%GH_AUTH_USER%%" "%%GH_AUTH_PASS%%" "%%GH_RESTAPI_USER_REPO_WORKFLOWS_URL_PATH%%" || goto MAIN_EXIT
 echo.
 
 "%JQ_EXECUTABLE%" "length" "%CURL_OUTPUT_FILE%" 2>nul > "%QUERY_TEMP_FILE%"
@@ -119,9 +119,13 @@ if %PAGE% LSS 2 if %QUERY_LEN% EQU 0 (
   exit /b 255
 ) >&2
 
+call set "GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE=%%GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE_NAME:{{OWNER}}=%OWNER%%%"
+call set "GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE=%%GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE:{{REPO}}=%REPO%%%"
+call set "GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE=%%GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE:{{DATE_TIME}}=%PROJECT_LOG_FILE_NAME_DATE_TIME%%%"
+
 echo.Archiving backup directory...
-call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_REPOS_BACKUP_DIR%%" && ^
-call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_ADAPTOR_BACKUP_TEMP_DIR%%" "*" "%%GH_REPOS_BACKUP_DIR%%/repo-info--[%%OWNER%%][%%REPO%%]--%%PROJECT_LOG_FILE_NAME_DATE_TIME%%.7z" -sdel || exit /b 20
+call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_BACKUP_OUTPUT_DIR%%" && ^
+call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_BACKUP_TEMP_DIR%%" "*" "%%GH_BACKUP_OUTPUT_DIR%%/%%GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE%%.7z" -sdel || exit /b 20
 echo.
 
 exit /b 0

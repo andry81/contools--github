@@ -87,10 +87,9 @@ if %FLAG_SKIP_SORT% EQU 0 (
 
 if %FLAG_NO_URL_DOMAIN_REMOVE% NEQ 0 goto NO_URL_DOMAIN_REMOVE
 
-for /F "usebackq eol= tokens=* delims=" %%i in ("%INPUT_LIST_FILE%") do (
-  set "URL_PATH=%%i"
-  call :PROCESS_URL
-) >> "%INOUT_LIST_FILE_TMP2%"
+(
+  for /F "usebackq eol= tokens=* delims=" %%i in ("%INPUT_LIST_FILE%") do set "URL_PATH=%%i" & call :PROCESS_URL
+) > "%INOUT_LIST_FILE_TMP2%"
 
 type "%INOUT_LIST_FILE_TMP2%"
 

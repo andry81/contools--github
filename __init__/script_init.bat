@@ -23,9 +23,9 @@ set LAST_ERROR=%ERRORLEVEL%
 if %NEST_LVL% EQU 0 if %LAST_ERROR% EQU 0 (
   rem copy log into project output directory
   if "%~1" == "backup" (
-    call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/xcopy_dir.bat" "%%PROJECT_LOG_DIR%%" "%%GH_ADAPTOR_BACKUP_DIR%%/%%~2/.log/%%PROJECT_LOG_DIR_NAME%%" /E /Y /D
+    call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/xcopy_dir.bat" "%%PROJECT_LOG_DIR%%" "%%GH_BACKUP_DIR%%/%%~2/.log/%%PROJECT_LOG_DIR_NAME%%" /E /Y /D
   ) else if "%~1" == "workflow" (
-    call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/xcopy_dir.bat" "%%PROJECT_LOG_DIR%%" "%%GH_ADAPTOR_WORKFLOW_DIR%%/%%~2/.log/%%PROJECT_LOG_DIR_NAME%%" /E /Y /D
+    call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/xcopy_dir.bat" "%%PROJECT_LOG_DIR%%" "%%GH_WORKFLOW_DIR%%/%%~2/.log/%%PROJECT_LOG_DIR_NAME%%" /E /Y /D
   )
 )
 

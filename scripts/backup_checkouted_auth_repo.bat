@@ -4,7 +4,7 @@ rem USAGE:
 rem   backup_checkouted_auth_repo.bat [<Flags>] [--] <OWNER> <REPO>
 
 rem Description:
-rem   Script to backup a private repository with credentials.
+rem   Script to backup a repository with credentials.
 rem   Backup excludes a bare repository backup and used only NOT bare variant
 rem   with submodules recursion.
 
@@ -75,12 +75,12 @@ if not defined REPO (
 
 set "QUERY_TEMP_FILE=%SCRIPT_TEMP_CURRENT_DIR%\query.txt"
 
-set "GH_ADAPTOR_BACKUP_TEMP_DIR=%SCRIPT_TEMP_CURRENT_DIR%\backup\checkout"
+set "GH_BACKUP_TEMP_DIR=%SCRIPT_TEMP_CURRENT_DIR%\backup\checkouted"
 
-set "GH_REPOS_BACKUP_TEMP_DIR=%GH_ADAPTOR_BACKUP_TEMP_DIR%/repo/user/%OWNER%/%REPO%"
-set "GH_REPOS_BACKUP_DIR=%GH_ADAPTOR_BACKUP_DIR%/checkout/repo/user/%OWNER%/%REPO%"
+set "GH_BACKUP_OUTPUT_TEMP_DIR=%GH_BACKUP_TEMP_DIR%/repo/%OWNER%/%REPO%"
+set "GH_BACKUP_OUTPUT_DIR=%GH_BACKUP_CHECKOUTED_REPO_DIR%/%OWNER%/%REPO%"
 
-call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir.bat" "%%GH_REPOS_BACKUP_TEMP_DIR%%" >nul || exit /b 255
+call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir.bat" "%%GH_BACKUP_OUTPUT_TEMP_DIR%%" >nul || exit /b 255
 
 set HAS_AUTH_USER=0
 
@@ -92,12 +92,16 @@ if %HAS_AUTH_USER% EQU 0 (
   exit /b 255
 ) >&2
 
-call :GIT clone --config core.longpaths=true -v --recurse-submodules --progress "https://%%GH_AUTH_PASS%%@github.com/%%OWNER%%/%%REPO%%" "%%GH_REPOS_BACKUP_TEMP_DIR%%" || goto MAIN_EXIT
+call :GIT clone --config core.longpaths=true -v --recurse-submodules --progress "https://%%GH_AUTH_PASS%%@github.com/%%OWNER%%/%%REPO%%" "%%GH_BACKUP_OUTPUT_TEMP_DIR%%" || goto MAIN_EXIT
 echo.
 
+call set "GH_BACKUP_CHECKOUTED_AUTH_REPO_FILE=%%GH_BACKUP_CHECKOUTED_AUTH_REPO_FILE_NAME:{{OWNER}}=%OWNER%%%"
+call set "GH_BACKUP_CHECKOUTED_AUTH_REPO_FILE=%%GH_BACKUP_CHECKOUTED_AUTH_REPO_FILE:{{REPO}}=%REPO%%%"
+call set "GH_BACKUP_CHECKOUTED_AUTH_REPO_FILE=%%GH_BACKUP_CHECKOUTED_AUTH_REPO_FILE:{{DATE_TIME}}=%PROJECT_LOG_FILE_NAME_DATE_TIME%%%"
+
 echo.Archiving backup directory...
-call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_REPOS_BACKUP_DIR%%" && ^
-call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_ADAPTOR_BACKUP_TEMP_DIR%%" "*" "%%GH_REPOS_BACKUP_DIR%%/auth-checkout-repo--[%%OWNER%%][%%REPO%%]--%%PROJECT_LOG_FILE_NAME_DATE_TIME%%.7z" -sdel || exit /b 20
+call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_BACKUP_OUTPUT_DIR%%" && ^
+call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_BACKUP_TEMP_DIR%%" "*" "%%GH_BACKUP_OUTPUT_DIR%%/%%GH_BACKUP_CHECKOUTED_AUTH_REPO_FILE%%.7z" -sdel || exit /b 20
 echo.
 
 exit /b 0

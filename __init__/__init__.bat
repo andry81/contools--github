@@ -81,11 +81,11 @@ call "%%CONTOOLS_ROOT%%/std/if_var_defined_and_file_exist.bat" JQ_EXECUTABLE || 
   exit /b 255
 ) >&2
 
-call "%%CONTOOLS_ROOT%%/std/canonical_path.bat" GH_ADAPTOR_BACKUP_DIR   "%%GH_ADAPTOR_BACKUP_DIR%%"
-call "%%CONTOOLS_ROOT%%/std/canonical_path.bat" GH_ADAPTOR_WORKFLOW_DIR "%%GH_ADAPTOR_WORKFLOW_DIR%%"
+call "%%CONTOOLS_ROOT%%/std/canonical_path.bat" GH_BACKUP_DIR   "%%GH_BACKUP_DIR%%"
+call "%%CONTOOLS_ROOT%%/std/canonical_path.bat" GH_WORKFLOW_DIR "%%GH_WORKFLOW_DIR%%"
 
-call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_ADAPTOR_BACKUP_DIR%%" || exit /b
-call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_ADAPTOR_WORKFLOW_DIR%%" || exit /b
+call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_BACKUP_DIR%%" || exit /b
+call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_WORKFLOW_DIR%%" || exit /b
 
 if %NO_GEN%0 EQU 0 (
   call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%PROJECT_OUTPUT_ROOT%%" || exit /b

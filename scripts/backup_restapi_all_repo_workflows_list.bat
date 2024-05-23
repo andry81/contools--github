@@ -1,7 +1,7 @@
 @echo off
 
 rem USAGE:
-rem   backup_restapi_all_user_repo_workflows_list.bat [<Flags>] [--] [<cmd> [<param0> [<param1>]]]
+rem   backup_restapi_all_repo_workflows_list.bat [<Flags>] [--] [<cmd> [<param0> [<param1>]]]
 
 rem Description:
 rem   Script to request all restapi responses of repository workflow lists from
@@ -100,12 +100,12 @@ for /F "usebackq eol=# tokens=1,* delims=/" %%i in ("%CONTOOLS_GITHUB_PROJECT_OU
   set "REPO_OWNER=%%i"
   set "REPO=%%j"
 
-  call "%%?~dp0%%.impl/update_skip_state.bat" "backup_restapi_user_repo_workflows_list.bat" "%%REPO_OWNER%%" "%%REPO%%"
+  call "%%?~dp0%%.impl/update_skip_state.bat" "backup_restapi_repo_workflows_list.bat" "%%REPO_OWNER%%" "%%REPO%%"
 
   if not defined SKIPPING_CMD (
-    call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_user_repo_workflows_list.bat"%%BARE_FLAGS%% "%%REPO_OWNER%%" "%%REPO%%" || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
+    call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_repo_workflows_list.bat"%%BARE_FLAGS%% "%%REPO_OWNER%%" "%%REPO%%" || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
     echo.---
-  ) else call echo.* backup_restapi_user_repo_workflows_list.bat "%%REPO_OWNER%%" "%%REPO%%"
+  ) else call echo.* backup_restapi_repo_workflows_list.bat "%%REPO_OWNER%%" "%%REPO%%"
 )
 
 :SKIP_AUTH_USER
@@ -117,12 +117,12 @@ for /F "usebackq eol=# tokens=1,* delims=/" %%i in ("%CONTOOLS_GITHUB_PROJECT_OU
   set "REPO_OWNER=%%i"
   set "REPO=%%j"
 
-  call "%%?~dp0%%.impl/update_skip_state.bat" "backup_restapi_user_repo_workflows_list.bat" "%%REPO_OWNER%%" "%%REPO%%"
+  call "%%?~dp0%%.impl/update_skip_state.bat" "backup_restapi_repo_workflows_list.bat" "%%REPO_OWNER%%" "%%REPO%%"
 
   if not defined SKIPPING_CMD (
-    call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_user_repo_workflows_list.bat"%%BARE_FLAGS%% "%%REPO_OWNER%%" "%%REPO%%" || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
+    call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_repo_workflows_list.bat"%%BARE_FLAGS%% "%%REPO_OWNER%%" "%%REPO%%" || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
     echo.---
-  ) else call echo.* backup_restapi_user_repo_workflows_list.bat "%%REPO_OWNER%%" "%%REPO%%"
+  ) else call echo.* backup_restapi_repo_workflows_list.bat "%%REPO_OWNER%%" "%%REPO%%"
 )
 
 exit /b 0

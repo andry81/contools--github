@@ -90,10 +90,9 @@ if %FLAG_SKIP_SORT% EQU 0 (
 
 if %FLAG_NO_PATH_PREFIX_REMOVE% NEQ 0 goto NO_PATH_PREFIX_REMOVE
 
-for /F "usebackq eol= tokens=* delims=" %%i in ("%INPUT_LIST_FILE%") do (
-  set "FILE_PATH=%%i"
-  call :PROCESS_PATH
-) >> "%INOUT_LIST_FILE_TMP2%"
+(
+  for /F "usebackq eol= tokens=* delims=" %%i in ("%INPUT_LIST_FILE%") do set "FILE_PATH=%%i" & call :PROCESS_PATH
+) > "%INOUT_LIST_FILE_TMP2%"
 
 type "%INOUT_LIST_FILE_TMP2%"
 
