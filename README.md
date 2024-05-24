@@ -1,10 +1,11 @@
 > **Warning** FOR GIT USERS: To clone including all dependecies you must use [fork](https://github.com/plusone-robotics/vcstool) (has the sparse checkout feature) of the [vcstool](https://github.com/dirk-thomas/vcstool) python module (currently the sparse checkout feature is not merged).
 
 <p align="center">Github local scripts to:
-* Backup RestAPI responses.
+* Backup RestAPI JSON responses.
 * Backup bare or/and checkouted repositories.
+* Delete repositories.
 * Workflow enable.
-* Delete repositories.</p>
+* Generate config files from backed up RestAPI JSON files.</p>
 
 <!-- -- >
 <p align="center">
