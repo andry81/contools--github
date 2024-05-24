@@ -3,22 +3,24 @@
 * contools--github
 
 1. DESCRIPTION
-2. CATALOG CONTENT DESCRIPTION
-3. USAGE
-3.1. Generate config files
-3.2. Edit generated config files
-3.3. Run RestAPI JSON response backup scripts
-3.4. Run repositories backup
-3.5. Delete repositories
-3.6. Run workflows enabler
-3.7. Generate `workflows.lst` config file from the all latest backed up
+2. LICENSE
+3. REPOSITORIES
+4. CATALOG CONTENT DESCRIPTION
+5. USAGE
+5.1. Generate config files
+5.2. Edit generated config files
+5.3. Run RestAPI JSON response backup scripts
+5.4. Run repositories backup
+5.5. Delete repositories
+5.6. Run workflows enabler
+5.7. Generate `workflows.lst` config file from the all latest backed up
      RestAPI JSON files using `repos-auth-with-workflows.lst` and
      `repos-with-workflows.lst` config files.
-4. AUTHENTICATION
-5. KNOWN ISSUES
-5.1. The `backup_restapi_user_repos_list.bat` script does return incomplete
+6. AUTHENTICATION
+7. KNOWN ISSUES
+7.1. The `backup_restapi_user_repos_list.bat` script does return incomplete
      RestAPI JSON response. Not all the public repositories is returned.
-6. AUTHOR
+8. AUTHOR
 
 -------------------------------------------------------------------------------
 1. DESCRIPTION
@@ -31,7 +33,26 @@ Github local scripts to:
 * Generate config files from backed up RestAPI JSON files.
 
 -------------------------------------------------------------------------------
-2. CATALOG CONTENT DESCRIPTION
+2. LICENSE
+-------------------------------------------------------------------------------
+The MIT license (see included text file "license.txt" or
+https://en.wikipedia.org/wiki/MIT_License)
+
+-------------------------------------------------------------------------------
+3. REPOSITORIES
+-------------------------------------------------------------------------------
+Primary:
+  * https://github.com/andry81/contools--github/branches
+    https://github.com/andry81/contools--github.git
+First mirror:
+  * https://sf.net/p/contools/contools--github/ci/master/tree
+    https://git.code.sf.net/p/contools/contools--github
+Second mirror:
+  * https://gitlab.com/andry81/contools-github/-/branches
+    https://gitlab.com/andry81/contools-github.git
+
+-------------------------------------------------------------------------------
+4. CATALOG CONTENT DESCRIPTION
 -------------------------------------------------------------------------------
 
 <root>
@@ -127,11 +148,11 @@ Github local scripts to:
      # Scripts.
 
 -------------------------------------------------------------------------------
-3. USAGE
+5. USAGE
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
-3.1. Generate config files
+5.1. Generate config files
 -------------------------------------------------------------------------------
 
 Run:
@@ -140,7 +161,7 @@ Run:
   __init__/__init__.bat
 
 -------------------------------------------------------------------------------
-3.2. Edit generated config files
+5.2. Edit generated config files
 -------------------------------------------------------------------------------
 
 accounts-org.lst
@@ -155,7 +176,7 @@ config.0.vars
 config.1.vars
 
 -------------------------------------------------------------------------------
-3.3. Run RestAPI JSON response backup scripts
+5.3. Run RestAPI JSON response backup scripts
 -------------------------------------------------------------------------------
 
 To backup all RestAPI JSON responses for authenticated user plus accounts from
@@ -184,7 +205,7 @@ excluding first 2 scripts:
   backup_restapi_all_exclude_repos_list.bat
 
 -------------------------------------------------------------------------------
-3.4. Run repositories backup
+5.4. Run repositories backup
 -------------------------------------------------------------------------------
 
 To backup a single user repository:
@@ -232,7 +253,7 @@ To backup multiple only authenticated user repositories from `repos-auth.lst`:
   backup_*_all_auth_repos.bat ...
 
 -------------------------------------------------------------------------------
-3.5. Delete repositories
+5.5. Delete repositories
 -------------------------------------------------------------------------------
 
 To delete a single user repository:
@@ -246,7 +267,7 @@ To delete multiple user repositories from `repos-to-delete.lst`:
   delete_restapi_user_repos.bat ...
 
 -------------------------------------------------------------------------------
-3.6. Run workflows enabler
+5.6. Run workflows enabler
 -------------------------------------------------------------------------------
 
 To be able to enable multiple user repository workflow lists:
@@ -264,7 +285,7 @@ To enable multiple user repository workflow lists:
   enable_restapi_workflows.bat ...
 
 -------------------------------------------------------------------------------
-3.7. Generate `workflows.lst` config file from the all latest backed up
+5.7. Generate `workflows.lst` config file from the all latest backed up
      RestAPI JSON files using `repos-auth-with-workflows.lst` and
      `repos-with-workflows.lst` config files.
 -------------------------------------------------------------------------------
@@ -291,18 +312,18 @@ To generate `workflows.lst` config file:
   gen_workflows_config_from_last_backup.bat ...
 
 -------------------------------------------------------------------------------
-4. AUTHENTICATION
+6. AUTHENTICATION
 -------------------------------------------------------------------------------
-Authentication is based on `GH_AUTH_USER`. `GH_AUTH_PASS` and `GH_AUTH_PASS_*`
+Authentication is based on `GH_AUTH_USER`, `GH_AUTH_PASS` and `GH_AUTH_PASS_*`
 variables. You must set them to use authentication, otherwise the RestAPI JSON
 response may be truncated, incomplete or invalid.
 
 -------------------------------------------------------------------------------
-5. KNOWN ISSUES
+7. KNOWN ISSUES
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
-5.1. The `backup_restapi_user_repos_list.bat` script does return incomplete
+7.1. The `backup_restapi_user_repos_list.bat` script does return incomplete
      RestAPI JSON response. Not all the public repositories is returned.
 -------------------------------------------------------------------------------
 For some not know reason the `https://api.github.com/users/USER/repos` url
@@ -316,6 +337,6 @@ Use the authenticated user request through the
 and `https://api.github.com/user/repos` url as the RestAPI JSON request.
 
 -------------------------------------------------------------------------------
-6. AUTHOR
+8. AUTHOR
 -------------------------------------------------------------------------------
 Andrey Dibrov (andry at inbox dot ru)
