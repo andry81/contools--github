@@ -16,6 +16,8 @@ rem     Skip repository workflows list alphabetic sort and print as is from the
 rem     json file.
 rem   -no-path-prefix-remove
 rem     Don't remove path prefix (`.github/workflows/`) from the output.
+rem   -print-owner-repo-prefix
+rem     Print `<owner>/<repo>:` prefix for each workflow.
 
 setlocal
 
@@ -37,6 +39,7 @@ exit /b %LAST_ERROR%
 rem script flags
 set FLAG_SKIP_SORT=0
 set FLAG_NO_PATH_PREFIX_REMOVE=0
+set FLAG_PRINT_OWNER_REPO_PREFIX=0
 set "BARE_FLAGS="
 
 :FLAGS_LOOP
@@ -53,6 +56,9 @@ if defined FLAG (
   ) else if "%FLAG%" == "-no-path-prefix-remove" (
     set FLAG_NO_PATH_PREFIX_REMOVE=1
     set BARE_FLAGS=%BARE_FLAGS% -no-path-prefix-remove
+  ) else if "%FLAG%" == "-print-owner-repo-prefix" (
+    set FLAG_PRINT_OWNER_REPO_PREFIX=1
+    set BARE_FLAGS=%BARE_FLAGS% -print-owner-repo-prefix
   ) else if not "%FLAG%" == "--" (
     echo.%?~nx0%: error: invalid flag: %FLAG%
     exit /b -255
@@ -88,6 +94,21 @@ set "GH_BACKUP_EXTRACT_TEMP_DIR=%SCRIPT_TEMP_CURRENT_DIR%"
 set "REDIR_LINE="
 if %FLAG_SKIP_SORT% EQU 0 set REDIR_LINE=^>"%INOUT_LIST_FILE_TMP0%"
 
+rem CAUTION:
+rem   1. If a variable is empty, then it would not be expanded in the `cmd.exe`
+rem      command line or in the inner expression of the
+rem      `for /F "usebackq ..." %%i in (`<inner-expression>`) do ...`
+rem      statement.
+rem   2. The `cmd.exe` command line or the inner expression of the
+rem      `for /F "usebackq ..." %%i in (`<inner-expression>`) do ...`
+rem      statement does expand twice.
+rem
+rem   We must expand the command line into a variable to avoid these above.
+rem
+
+set "PRINT_BLANK_LINE="
+set NUM_PRINTED_JSON_FILES=0
+
 for /F "usebackq eol=# tokens=1,* delims=/" %%i in (%CONFIG_FILE%) do (
   set "REPO_OWNER=%%i"
   set "REPO=%%j"
@@ -96,13 +117,12 @@ for /F "usebackq eol=# tokens=1,* delims=/" %%i in (%CONFIG_FILE%) do (
   call set "GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE_PTTN=%%GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE_PTTN:{{REPO}}=%%j%%"
   call set "GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE_PTTN=%%GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE_PTTN:{{DATE_TIME}}=????'??'??_??'??'??''???%%"
 
-  rem CAUTION:
-  rem   If a variable is empty, then it would not be expanded in the `cmd.exe` command line or in case of `for /F ...`!
-  rem   We must expand the command line into a variable.
-  rem
+  rem expansion into a variable
   call set ?.=@dir "%%GH_BACKUP_RESTAPI_REPO_DIR:/=\%%\%%REPO_OWNER%%\%%REPO%%\%%GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE_PTTN%%.*" /A:-D /B /O:-N /S
 
   call :EXEC_AND_RETURN_FIRST_LINE
+
+  if defined PRINT_BLANK_LINE echo.
 
   call echo.### %%REPO_OWNER%%/%%REPO%%
 
@@ -113,7 +133,7 @@ for /F "usebackq eol=# tokens=1,* delims=/" %%i in (%CONFIG_FILE%) do (
 
     for /F "usebackq eol= tokens=* delims=" %%k in (`%%?.%%`) do (
       set "JSON_FILE=%%k"
-      call "%%?~dp0%%print_all_repo_workflows_from_restapi_json.bat"%%BARE_FLAGS%% -skip-sort -- "%%JSON_FILE%%"
+      call "%%?~dp0%%print_all_repo_workflows_from_restapi_json.bat"%%BARE_FLAGS%% -skip-sort -- "%%JSON_FILE%%" && set /A NUM_PRINTED_JSON_FILES+=1
     ) %REDIR_LINE%
     
     if %FLAG_SKIP_SORT% EQU 0 (
@@ -122,10 +142,12 @@ for /F "usebackq eol=# tokens=1,* delims=/" %%i in (%CONFIG_FILE%) do (
     )
   )
 
-  echo.
+  set PRINT_BLANK_LINE=1
 )
 
-exit /b 0
+if %NUM_PRINTED_JSON_FILES% NEQ 0 exit /b 0
+
+exit /b -1
 
 :EXEC_AND_RETURN_FIRST_LINE
 set "GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE="

@@ -1,4 +1,9 @@
 2024.05.24:
+* new: scripts/gen_workflows_config_from_last_backup.bat: script to generate `workflows.lst` config file into `gen` subdirectory of the output config directory from the all latest backed up RestAPI JSON files using `repos-auth-with-workflows.lst` and `repos-with-workflows.lst` config files
+* changed: README_EN.txt: readme update
+* refactor: scripts: minor refactor
+
+2024.05.24:
 * new: scripts/print_all_repo_workflows_from_last_backup_by_config.bat: script to print all repository workflows from the all latest backed up RestAPI JSON files using a config file
 * changed: _config/config.0.vars.in: file names is moved into system config
 * changed: README_EN.txt: readme update

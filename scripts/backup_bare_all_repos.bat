@@ -4,7 +4,7 @@ rem USAGE:
 rem   backup_bare_all_repos.bat [<Flags>] [--] [<cmd> [<param0> [<param1>]]]
 
 rem Description:
-rem   Script to backup all repositories including private repositories with
+rem   Script to backup all repositories including repositories with
 rem   credentials.
 rem   Backup by default includes only a bare repository backup.
 
