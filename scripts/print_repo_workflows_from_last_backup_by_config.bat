@@ -1,7 +1,7 @@
 @echo off
 
 rem USAGE:
-rem   print_all_repo_workflows_from_last_backup_by_config.bat [<Flags>] [--] <CONFIG_FILE>
+rem   print_repo_workflows_from_last_backup_by_config.bat [<Flags>] [--] <CONFIG_FILE>
 
 rem Description:
 rem   Script prints all repository workflows from the all latest backed up
@@ -18,6 +18,8 @@ rem   -no-path-prefix-remove
 rem     Don't remove path prefix (`.github/workflows/`) from the output.
 rem   -print-owner-repo-prefix
 rem     Print `<owner>/<repo>:` prefix for each workflow.
+rem   -filter-inactive
+rem     Filter only not "active" workflows.
 
 setlocal
 
@@ -40,6 +42,7 @@ rem script flags
 set FLAG_SKIP_SORT=0
 set FLAG_NO_PATH_PREFIX_REMOVE=0
 set FLAG_PRINT_OWNER_REPO_PREFIX=0
+set FLAG_FILTER_INACTIVE=0
 set "BARE_FLAGS="
 
 :FLAGS_LOOP
@@ -59,6 +62,9 @@ if defined FLAG (
   ) else if "%FLAG%" == "-print-owner-repo-prefix" (
     set FLAG_PRINT_OWNER_REPO_PREFIX=1
     set BARE_FLAGS=%BARE_FLAGS% -print-owner-repo-prefix
+  ) else if "%FLAG%" == "-filter-inactive" (
+    set FLAG_FILTER_INACTIVE=1
+    set BARE_FLAGS=%BARE_FLAGS% -filter-inactive
   ) else if not "%FLAG%" == "--" (
     echo.%?~nx0%: error: invalid flag: %FLAG%
     exit /b -255
@@ -133,7 +139,7 @@ for /F "usebackq eol=# tokens=1,* delims=/" %%i in (%CONFIG_FILE%) do (
 
     for /F "usebackq eol= tokens=* delims=" %%k in (`%%?.%%`) do (
       set "JSON_FILE=%%k"
-      call "%%?~dp0%%print_all_repo_workflows_from_restapi_json.bat"%%BARE_FLAGS%% -skip-sort -- "%%JSON_FILE%%" && set /A NUM_PRINTED_JSON_FILES+=1
+      call "%%?~dp0%%print_repo_workflows_from_restapi_json.bat"%%BARE_FLAGS%% -skip-sort -- "%%JSON_FILE%%" && set /A NUM_PRINTED_JSON_FILES+=1
     ) %REDIR_LINE%
     
     if %FLAG_SKIP_SORT% EQU 0 (

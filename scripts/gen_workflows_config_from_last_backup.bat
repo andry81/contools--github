@@ -17,6 +17,8 @@ rem     Skip repository workflows list alphabetic sort and print as is from the
 rem     json file.
 rem   -no-path-prefix-remove
 rem     Don't remove path prefix (`.github/workflows/`) from the output.
+rem   -filter-inactive
+rem     Filter only not "active" workflows.
 
 setlocal
 
@@ -38,6 +40,7 @@ exit /b %LAST_ERROR%
 rem script flags
 set FLAG_SKIP_SORT=0
 set FLAG_NO_PATH_PREFIX_REMOVE=0
+set FLAG_FILTER_INACTIVE=0
 set "BARE_FLAGS="
 
 :FLAGS_LOOP
@@ -55,6 +58,9 @@ if defined FLAG (
   ) else if "%FLAG%" == "-no-path-prefix-remove" (
     set FLAG_NO_PATH_PREFIX_REMOVE=1
     set BARE_FLAGS=%BARE_FLAGS% -no-path-prefix-remove
+  ) else if "%FLAG%" == "-filter-inactive" (
+    set FLAG_FILTER_INACTIVE=1
+    set BARE_FLAGS=%BARE_FLAGS% -filter-inactive
   ) else (
     echo.%?~nx0%: error: invalid flag: %FLAG%
     exit /b -255
@@ -68,11 +74,18 @@ if defined FLAG (
 
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%/gen" || exit /b
 
+set "GEN_FILE_NAME_SUFFIX="
+
+if %FLAG_FILTER_INACTIVE% NEQ 0 (
+  set "GEN_FILE_NAME_SUFFIX=-inactive"
+)
+
 (
   for /F "eol= tokens=* delims=" %%i in ("# list of workflows in format: <owner>/<repo>:<workflow-id>") do echo.%%i
   echo.
 
-  call "%%?~dp0%%print_all_repo_workflows_from_last_backup_by_config.bat"%%BARE_FLAGS%% -print-owner-repo-prefix -- "repos-auth-with-workflows.lst" && echo.
+  call "%%?~dp0%%print_repo_workflows_from_last_backup_by_config.bat"%%BARE_FLAGS%% -print-owner-repo-prefix -- "repos-auth-with-workflows.lst"
+  echo.
 
-  call "%%?~dp0%%print_all_repo_workflows_from_last_backup_by_config.bat"%%BARE_FLAGS%% -print-owner-repo-prefix -- "repos-with-workflows.lst"
-) > "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/gen/workflows.lst"
+  call "%%?~dp0%%print_repo_workflows_from_last_backup_by_config.bat"%%BARE_FLAGS%% -print-owner-repo-prefix -- "repos-with-workflows.lst"
+) > "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/gen/workflows%GEN_FILE_NAME_SUFFIX%.lst"

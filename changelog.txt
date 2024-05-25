@@ -1,3 +1,10 @@
+2024.05.25:
+* new: scripts: gen_workflows_config_from_last_backup.bat, print_repo_workflows_from_last_backup_by_config.bat, print_repo_workflows_from_restapi_json.bat: `-filter-inactive` to filter not "active" workflows only
+* new: scripts/print_repo_urls_from_restapi_json.bat: `-filter-source` to filter "source" repositories only
+* changed: scripts/print_inactive_repo_workflows_from_restapi_json.bat: removed and merged into `print_repo_workflows_from_restapi_json.bat`
+* changed: scripts/scripts/print_source_repos_from_restapi_json.bat: removed and merged into `print_repo_urls_from_restapi_json.bat`
+* refactor: scripts/print_*.bat: print scripts refactor
+
 2024.05.24:
 * changed: README_EN.md: readme update
 

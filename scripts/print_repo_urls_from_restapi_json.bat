@@ -1,10 +1,10 @@
 @echo off
 
 rem USAGE:
-rem   print_all_repos_from_restapi_json.bat [<Flags>] [--] <JSON_FILE>
+rem   print_repo_urls_from_restapi_json.bat [<Flags>] [--] <JSON_FILE>
 
 rem Description:
-rem   Script prints all repositories from the json file.
+rem   Script prints repository URLs from the json file.
 
 rem <Flags>:
 rem   --
@@ -14,6 +14,8 @@ rem     Skip repositories list alphabetic sort and print as is from the json
 rem     file.
 rem   -no-url-domain-remove
 rem     Don't remove url domain (`https://github.com/`) from the output.
+rem   -filter-source
+rem     Filter "source" repositories only.
 
 setlocal
 
@@ -35,6 +37,7 @@ exit /b %LAST_ERROR%
 rem script flags
 set FLAG_SKIP_SORT=0
 set FLAG_NO_URL_DOMAIN_REMOVE=0
+set FLAG_FILTER_SOURCE=0
 
 :FLAGS_LOOP
 
@@ -49,6 +52,8 @@ if defined FLAG (
     set FLAG_SKIP_SORT=1
   ) else if "%FLAG%" == "-no-url-domain-remove" (
     set FLAG_NO_URL_DOMAIN_REMOVE=1
+  ) else if "%FLAG%" == "-filter-source" (
+    set FLAG_FILTER_SOURCE=1
   ) else if not "%FLAG%" == "--" (
     echo.%?~nx0%: error: invalid flag: %FLAG%
     exit /b -255
@@ -76,7 +81,11 @@ if not exist "%JSON_FILE%" (
   exit /b 255
 ) >&2
 
-"%JQ_EXECUTABLE%" -c -r ".[].html_url" "%JSON_FILE%" > "%INOUT_LIST_FILE_TMP0%" || exit /b
+if %FLAG_FILTER_SOURCE% EQU 0 (
+  set "JQ_EXPR=.[].html_url"
+) else set "JQ_EXPR=.[] | select(.fork == false).html_url"
+
+"%JQ_EXECUTABLE%" -c -r "%JQ_EXPR%" "%JSON_FILE%" > "%INOUT_LIST_FILE_TMP0%" || exit /b
 
 set "INPUT_LIST_FILE=%INOUT_LIST_FILE_TMP0%"
 
