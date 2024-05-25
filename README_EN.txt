@@ -1,5 +1,5 @@
 * README_EN.txt
-* 2024.05.24
+* 2024.05.25
 * contools--github
 
 1. DESCRIPTION
@@ -285,7 +285,7 @@ To enable multiple user repository workflow lists:
   enable_restapi_workflows.bat ...
 
 -------------------------------------------------------------------------------
-5.7. Generate `workflows.lst` config file from the all latest backed up
+5.7. Generate `workflows*.lst` config file from the all latest backed up
      RestAPI JSON files using `repos-auth-with-workflows.lst` and
      `repos-with-workflows.lst` config files.
 -------------------------------------------------------------------------------
@@ -306,7 +306,7 @@ To backup multiple user repository workflow lists:
   >
   backup_restapi_all_repo_workflows_list.bat
 
-To generate `workflows.lst` config file:
+To generate `workflows*.lst` config file:
 
   >
   gen_workflows_config_from_last_backup.bat ...
