@@ -1,3 +1,7 @@
+2024.05.26:
+* new: scripts/enable_restapi_workflows.bat: `-use-inactive` to use not "active" repositories from `workflows-inactive.lst` config file
+* changed: README_EN.txt: readme update
+
 2024.05.25:
 * changed: README_EN.txt: readme update
 

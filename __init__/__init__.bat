@@ -69,6 +69,7 @@ if %NO_GEN%0 EQU 0 (
   call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" repos-to-delete.lst || exit /b
 
   call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" workflows.lst || exit /b
+  call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" workflows-inactive.lst || exit /b
 ) else call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/load_config_dir.bat" %%* -- "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" || exit /b
 
 call "%%CONTOOLS_ROOT%%/std/if_var_defined_and_file_exist.bat" CURL_EXECUTABLE || (

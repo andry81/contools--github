@@ -11,6 +11,8 @@ rem   --
 rem     Stop flags parse.
 rem   -exit-on-error
 rem     Don't continue on error.
+rem   -use-inactive
+rem     Use `workflows-inactive.lst` config file instead of `workflows.lst`.
 
 rem <cmd> [<param0> [<param1>]]
 rem   Continue from specific command with parameters.
@@ -46,6 +48,7 @@ exit /b
 :MAIN_IMPL
 rem script flags
 set FLAG_EXIT_ON_ERROR=0
+set FLAG_USE_INACTIVE=0
 
 :FLAGS_LOOP
 
@@ -58,6 +61,8 @@ if not "%FLAG:~0,1%" == "-" set "FLAG="
 if defined FLAG (
   if "%FLAG%" == "-exit-on-error" (
     set FLAG_EXIT_ON_ERROR=1
+  ) else if "%FLAG%" == "-use-inactive" (
+    set FLAG_USE_INACTIVE=1
   ) else if not "%FLAG%" == "--" (
     echo.%?~nx0%: error: invalid flag: %FLAG%
     exit /b -255
@@ -79,7 +84,9 @@ if defined FROM_CMD (
   set SKIPPING_CMD=1
 )
 
-set WORKFLOW_LISTS="%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/workflows.lst"
+if %FLAG_USE_INACTIVE% EQU 0 (
+  set WORKFLOW_LISTS="%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/workflows.lst"
+) else set WORKFLOW_LISTS="%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/workflows-inactive.lst"
 
 for /F "usebackq eol=# tokens=1,* delims=:" %%i in (%WORKFLOW_LISTS%) do for /F "eol=# tokens=1,* delims=/" %%k in ("%%i") do (
   set "REPO_OWNER=%%k"
