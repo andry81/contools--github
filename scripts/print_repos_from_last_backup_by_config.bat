@@ -1,25 +1,34 @@
 @echo off
 
 rem USAGE:
-rem   print_repo_workflows_from_last_backup_by_config.bat [<Flags>] [--] <CONFIG_FILE>
+rem   print_repos_from_last_backup_by_config.bat [<Flags>] [--] <CONFIG_FILE>
 
 rem Description:
-rem   Script prints all repository workflows from the all latest backed up
-rem   RestAPI JSON files using `<CONFIG_FILE>` config file. If `<CONFIG_FILE>`
+rem   Script prints all repositories from the latest backed up
+rem   RestAPI JSON file using `<CONFIG_FILE>` config file. If `<CONFIG_FILE>`
 rem   is a file name, then a file from the output config directory is used.
 
 rem <Flags>:
 rem   --
 rem     Stop flags parse.
 rem   -skip-sort
-rem     Skip repository workflows list alphabetic sort and print as is from the
-rem     json file.
-rem   -no-path-prefix-remove
-rem     Don't remove path prefix (`.github/workflows/`) from the output.
-rem   -print-owner-repo-prefix
-rem     Print `<owner>/<repo>:` prefix for each workflow.
-rem   -filter-inactive
-rem     Filter only not "active" workflows.
+rem     Skip repositories list alphabetic sort and print as is from the json
+rem     file.
+rem   -print-full-name
+rem     Print `full_name` field. By default `html_url` prints.
+rem   -no-url-domain-remove
+rem     Don't remove url domain (`https://github.com/`) from the output in
+rem     case of print the URL field.
+rem   -filter-source
+rem     Filter "source" repositories only.
+rem   -filter-forked
+rem     Filter forked repositories only.
+rem   -filter-auth
+rem     Filter authenticated repositories only.
+rem     Has no effect if `-filter-forked` is used.
+rem   -comment-private
+rem     Comment private repositories.
+rem     Has no effect if `-filter-auth` is used.
 
 setlocal
 
@@ -40,9 +49,12 @@ exit /b %LAST_ERROR%
 :MAIN
 rem script flags
 set FLAG_SKIP_SORT=0
-set FLAG_NO_PATH_PREFIX_REMOVE=0
-set FLAG_PRINT_OWNER_REPO_PREFIX=0
-set FLAG_FILTER_INACTIVE=0
+set FLAG_PRINT_FULL_NAME=0
+set FLAG_NO_URL_DOMAIN_REMOVE=0
+set FLAG_FILTER_SOURCE=0
+set FLAG_FILTER_FORKED=0
+set FLAG_FILTER_AUTH=0
+set FLAG_COMMENT_PRIVATE=0
 set "BARE_FLAGS="
 
 :FLAGS_LOOP
@@ -56,14 +68,23 @@ if not "%FLAG:~0,1%" == "-" set "FLAG="
 if defined FLAG (
   if "%FLAG%" == "-skip-sort" (
     set FLAG_SKIP_SORT=1
-  ) else if "%FLAG%" == "-no-path-prefix-remove" (
-    set FLAG_NO_PATH_PREFIX_REMOVE=1
+  ) else if "%FLAG%" == "-print-full-name" (
+    set FLAG_PRINT_FULL_NAME=1
     set BARE_FLAGS=%BARE_FLAGS% %FLAG%
-  ) else if "%FLAG%" == "-print-owner-repo-prefix" (
-    set FLAG_PRINT_OWNER_REPO_PREFIX=1
+  ) else if "%FLAG%" == "-no-url-domain-remove" (
+    set FLAG_NO_URL_DOMAIN_REMOVE=1
     set BARE_FLAGS=%BARE_FLAGS% %FLAG%
-  ) else if "%FLAG%" == "-filter-inactive" (
-    set FLAG_FILTER_INACTIVE=1
+  ) else if "%FLAG%" == "-filter-source" (
+    set FLAG_FILTER_SOURCE=1
+    set BARE_FLAGS=%BARE_FLAGS% %FLAG%
+  ) else if "%FLAG%" == "-filter-forked" (
+    set FLAG_FILTER_FORKED=1
+    set BARE_FLAGS=%BARE_FLAGS% %FLAG%
+  ) else if "%FLAG%" == "-filter-auth" (
+    set FLAG_FILTER_AUTH=1
+    set BARE_FLAGS=%BARE_FLAGS% %FLAG%
+  ) else if "%FLAG%" == "-comment-private" (
+    set FLAG_COMMENT_PRIVATE=1
     set BARE_FLAGS=%BARE_FLAGS% %FLAG%
   ) else if not "%FLAG%" == "--" (
     echo.%?~nx0%: error: invalid flag: %FLAG%
@@ -115,32 +136,33 @@ rem
 set "PRINT_BLANK_LINE="
 set NUM_PRINTED_JSON_FILES=0
 
-for /F "usebackq eol=# tokens=1,* delims=/" %%i in (%CONFIG_FILE%) do (
-  set "REPO_OWNER=%%i"
-  set "REPO=%%j"
+set TYPE=all
 
-  call set "GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE_PTTN=%%GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE_NAME:{{OWNER}}=%%i%%"
-  call set "GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE_PTTN=%%GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE_PTTN:{{REPO}}=%%j%%"
-  call set "GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE_PTTN=%%GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE_PTTN:{{DATE_TIME}}=????'??'??_??'??'??''???%%"
+for /F "usebackq eol=# tokens=1,* delims=/" %%i in (%CONFIG_FILE%) do (
+  set "OWNER=%%i"
+
+  call set "GH_BACKUP_RESTAPI_AUTH_USER_REPOS_FILE_PTTN=%%GH_BACKUP_RESTAPI_AUTH_USER_REPOS_FILE_NAME:{{OWNER}}=%%i%%"
+  call set "GH_BACKUP_RESTAPI_AUTH_USER_REPOS_FILE_PTTN=%%GH_BACKUP_RESTAPI_AUTH_USER_REPOS_FILE_PTTN:{{TYPE}}=%TYPE%%%"
+  call set "GH_BACKUP_RESTAPI_AUTH_USER_REPOS_FILE_PTTN=%%GH_BACKUP_RESTAPI_AUTH_USER_REPOS_FILE_PTTN:{{DATE_TIME}}=????'??'??_??'??'??''???%%"
 
   rem expansion into a variable
-  call set ?.=@dir "%%GH_BACKUP_RESTAPI_REPO_DIR:/=\%%\%%REPO_OWNER%%\%%REPO%%\%%GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE_PTTN%%.*" /A:-D /B /O:-N /S
+  call set ?.=@dir "%%GH_BACKUP_RESTAPI_USER_REPOS_DIR:/=\%%\%%OWNER%%\%%GH_BACKUP_RESTAPI_AUTH_USER_REPOS_FILE_PTTN%%.*" /A:-D /B /O:-N /S
 
   call :EXEC_AND_RETURN_FIRST_LINE
 
   if defined PRINT_BLANK_LINE echo.
 
-  call echo.### %%REPO_OWNER%%/%%REPO%%
+  call echo.### %%OWNER%%
 
-  if defined GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE (
-    call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/extract_files_from_archives.bat" -i -p "%%GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE%%" * "%%GH_BACKUP_EXTRACT_TEMP_DIR%%" >nul
+  if defined GH_BACKUP_RESTAPI_AUTH_USER_REPOS_FILE (
+    call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/extract_files_from_archives.bat" -i -p "%%GH_BACKUP_RESTAPI_AUTH_USER_REPOS_FILE%%" * "%%GH_BACKUP_EXTRACT_TEMP_DIR%%" >nul
 
-    call set ?.=@dir "%%GH_BACKUP_EXTRACT_TEMP_DIR:/=\%%\repo\%%REPO_OWNER%%\%%REPO%%\*.json" /A:-D /B /O:D /S
+    call set ?.=@dir "%%GH_BACKUP_EXTRACT_TEMP_DIR:/=\%%\repos\user\%%OWNER%%\*.json" /A:-D /B /O:D /S
 
     (
       for /F "usebackq eol= tokens=* delims=" %%k in (`%%?.%%`) do (
         set "JSON_FILE=%%k"
-        call "%%?~dp0%%print_repo_workflows_from_restapi_json.bat"%%BARE_FLAGS%% -skip-sort -- "%%JSON_FILE%%" && set /A NUM_PRINTED_JSON_FILES+=1
+        call "%%?~dp0%%print_repo_from_restapi_json.bat"%%BARE_FLAGS%% -skip-sort -- "%%JSON_FILE%%" && set /A NUM_PRINTED_JSON_FILES+=1
       )
     ) %REDIR_LINE%
     
@@ -158,9 +180,9 @@ if %NUM_PRINTED_JSON_FILES% NEQ 0 exit /b 0
 exit /b -1
 
 :EXEC_AND_RETURN_FIRST_LINE
-set "GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE="
+set "GH_BACKUP_RESTAPI_AUTH_USER_REPOS_FILE="
 for /F "usebackq eol= tokens=* delims=" %%i in (`%%?.%%`) do (
-  set "GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE=%%i"
+  set "GH_BACKUP_RESTAPI_AUTH_USER_REPOS_FILE=%%i"
   exit /b 0
 )
 exit /b 0

@@ -99,7 +99,7 @@ if defined FROM_CMD (
 set REPO_LISTS="%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/repos.lst"
 
 if %FLAG_SKIP_FORKS_LIST% EQU 0 (
-  set REPO_LISTS=%REPO_LISTS% "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/repos-forks.lst"
+  set REPO_LISTS=%REPO_LISTS% "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/repos-forked.lst"
 )
 
 for /F "usebackq eol=# tokens=1,* delims=/" %%i in (%REPO_LISTS%) do (

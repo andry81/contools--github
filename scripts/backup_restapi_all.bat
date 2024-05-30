@@ -15,10 +15,7 @@ rem     Skip request to private repositories in the auth repo list file.
 rem   -skip-account-lists
 rem     Skip request to accounts in the account list file.
 rem   -skip-forks-list
-rem     Skip request to forked repositories in the fork list file.
-rem     Note:
-rem       All forked repositories must be properly synchronized with the parent
-rem       repository before each new backup.
+rem     Skip request to forked repositories in the forks list file.
 rem   -query-repo-info-only
 rem     Request only repository information (including parent repository
 rem     address) avoding repository else like repo stargazers, subscribers,
@@ -192,7 +189,7 @@ for /F "usebackq eol=# tokens=* delims=" %%i in ("%CONTOOLS_GITHUB_PROJECT_OUTPU
 set REPO_LISTS="%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/repos.lst"
 
 if %FLAG_SKIP_FORKS_LIST% EQU 0 (
-  set REPO_LISTS=%REPO_LISTS% "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/repos-forks.lst"
+  set REPO_LISTS=%REPO_LISTS% "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/repos-forked.lst"
 )
 
 for /F "usebackq eol=# tokens=1,* delims=/" %%i in (%REPO_LISTS%) do (

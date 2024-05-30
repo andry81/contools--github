@@ -1,10 +1,10 @@
 @echo off
 
 rem USAGE:
-rem   print_repo_urls_from_restapi_json.bat [<Flags>] [--] <JSON_FILE>
+rem   print_repo_from_restapi_json.bat [<Flags>] [--] <JSON_FILE>
 
 rem Description:
-rem   Script prints repository URLs from the json file.
+rem   Script prints repository fields from the json file.
 
 rem <Flags>:
 rem   --
@@ -12,10 +12,21 @@ rem     Stop flags parse.
 rem   -skip-sort
 rem     Skip repositories list alphabetic sort and print as is from the json
 rem     file.
+rem   -print-full-name
+rem     Print `full_name` field. By default `html_url` prints.
 rem   -no-url-domain-remove
-rem     Don't remove url domain (`https://github.com/`) from the output.
+rem     Don't remove url domain (`https://github.com/`) from the output in
+rem     case of print the URL field.
 rem   -filter-source
 rem     Filter "source" repositories only.
+rem   -filter-forked
+rem     Filter forked repositories only.
+rem   -filter-auth
+rem     Filter authenticated repositories only.
+rem     Has no effect if `-filter-forked` is used.
+rem   -comment-private
+rem     Comment private repositories.
+rem     Has no effect if `-filter-auth` is used.
 
 setlocal
 
@@ -36,8 +47,12 @@ exit /b %LAST_ERROR%
 :MAIN
 rem script flags
 set FLAG_SKIP_SORT=0
+set FLAG_PRINT_FULL_NAME=0
 set FLAG_NO_URL_DOMAIN_REMOVE=0
 set FLAG_FILTER_SOURCE=0
+set FLAG_FILTER_FORKED=0
+set FLAG_FILTER_AUTH=0
+set FLAG_COMMENT_PRIVATE=0
 
 :FLAGS_LOOP
 
@@ -50,10 +65,18 @@ if not "%FLAG:~0,1%" == "-" set "FLAG="
 if defined FLAG (
   if "%FLAG%" == "-skip-sort" (
     set FLAG_SKIP_SORT=1
+  ) else if "%FLAG%" == "-print-full-name" (
+    set FLAG_PRINT_FULL_NAME=1
   ) else if "%FLAG%" == "-no-url-domain-remove" (
     set FLAG_NO_URL_DOMAIN_REMOVE=1
   ) else if "%FLAG%" == "-filter-source" (
     set FLAG_FILTER_SOURCE=1
+  ) else if "%FLAG%" == "-filter-forked" (
+    set FLAG_FILTER_FORKED=1
+  ) else if "%FLAG%" == "-filter-auth" (
+    set FLAG_FILTER_AUTH=1
+  ) else if "%FLAG%" == "-comment-private" (
+    set FLAG_COMMENT_PRIVATE=1
   ) else if not "%FLAG%" == "--" (
     echo.%?~nx0%: error: invalid flag: %FLAG%
     exit /b -255
@@ -81,9 +104,27 @@ if not exist "%JSON_FILE%" (
   exit /b 255
 ) >&2
 
+if %FLAG_PRINT_FULL_NAME% EQU 0 (
+  set "PRINT_FIELD_NAME=html_url"
+) else set "PRINT_FIELD_NAME=full_name"
+
+if %FLAG_FILTER_AUTH% EQU 0 (
+  set "FILTER_AUTH_EXPR="
+) else (
+  set "FILTER_AUTH_EXPR= | select(.private != false)"
+  set "FLAG_COMMENT_PRIVATE=0"
+)
+
+rem Docs: https://jqlang.github.io/jq/manual/v1.6/#assignment
+if %FLAG_COMMENT_PRIVATE% EQU 0 (
+  set "FILTER_FIELD_EXPR=.%PRINT_FIELD_NAME%"
+) else set "FILTER_FIELD_EXPR= | if .private != false then \"#\" + .%PRINT_FIELD_NAME% else .%PRINT_FIELD_NAME% end"
+
 if %FLAG_FILTER_SOURCE% EQU 0 (
-  set "JQ_EXPR=.[].html_url"
-) else set "JQ_EXPR=.[] | select(.fork == false).html_url"
+  if %FLAG_FILTER_FORKED% EQU 0 (
+    set "JQ_EXPR=.[]%FILTER_AUTH_EXPR%%FILTER_FIELD_EXPR%"
+  ) else set "JQ_EXPR=.[] | select(.fork != false).%PRINT_FIELD_NAME%"
+) else set "JQ_EXPR=.[] | select(.fork == false)%FILTER_AUTH_EXPR%%FILTER_FIELD_EXPR%"
 
 "%JQ_EXECUTABLE%" -c -r "%JQ_EXPR%" "%JSON_FILE%" > "%INOUT_LIST_FILE_TMP0%" || exit /b
 
@@ -94,6 +135,7 @@ if %FLAG_SKIP_SORT% EQU 0 (
   sort "%INOUT_LIST_FILE_TMP0%" /O "%INOUT_LIST_FILE_TMP1%"
 )
 
+if %FLAG_PRINT_FULL_NAME% NEQ 0 goto NO_URL_DOMAIN_REMOVE
 if %FLAG_NO_URL_DOMAIN_REMOVE% NEQ 0 goto NO_URL_DOMAIN_REMOVE
 
 (

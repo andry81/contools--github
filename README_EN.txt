@@ -1,5 +1,5 @@
 * README_EN.txt
-* 2024.05.26
+* 2024.05.30
 * contools--github
 
 1. DESCRIPTION
@@ -13,7 +13,9 @@
 5.4. Run repositories backup
 5.5. Delete repositories
 5.6. Run workflows enabler
-5.7. Generate `workflows*.lst` config file from the all latest backed up
+5.7. Generate `repos*.lst` config file from the latest backed up
+     RestAPI JSON file using `accounts-user.lst` config file
+5.8. Generate `workflows*.lst` config file from the all latest backed up
      RestAPI JSON files using `repos-auth-with-workflows.lst` and
      `repos-with-workflows.lst` config files
 6. AUTHENTICATION
@@ -103,9 +105,13 @@ Second mirror:
  |  |     |   #
  |  |     |   # Authenticated only user repositories with workflows list.
  |  |     |
- |  |     +- `repos-forks.lst`
+ |  |     +- `repos-forked.lst`
  |  |     |   #
- |  |     |   # User forked repositories list.
+ |  |     |   # User forked as child repositories list.
+ |  |     |
+ |  |     +- `repos-forked-parent.lst`
+ |  |     |   #
+ |  |     |   # User forked as parent repositories list.
  |  |     |
  |  |     +- `repos-to-delete.lst`
  |  |     |   #
@@ -178,7 +184,8 @@ accounts-user.lst
 repos.lst
 repos-auth.lst
 repos-auth-with-workflows.lst
-repos-forks.lst
+repos-forked.lst
+repos-forked-parent.lst
 repos-with-workflows.lst
 workflows.lst
 workflows-inactive.lst
@@ -202,7 +209,8 @@ To backup RestAPI JSON responses only for user organization accounts from
   backup_restapi_all_org_repos_list.bat
 
 To backup using previous 2 with `user repo info`, `stargazers`, `subscribers`,
-`forks`, `releases` using `repos.lst` and/or `repos-forks.lst`.
+`forks`, `releases` using `repos.lst` and/or `repos-forked.lst` and/or
+`repos-forked-parent.lst`.
 
   >
   backup_restapi_all.bat
@@ -252,7 +260,8 @@ To backup a single only authenticated user repository:
   >
   backup_*_auth_repo.bat ...
 
-To backup multiple user repositories from `repos.lst` and/or `repos-forks.lst`:
+To backup multiple user repositories from `repos.lst` and/or `repos-forked.lst`
+and/or `repos-forked-parent.lst`:
 
   >
   backup_*_all_repos.bat ...
@@ -300,7 +309,57 @@ To enable multiple inactive user repository workflow lists:
   enable_restapi_workflows.bat -use-inactive ...
 
 -------------------------------------------------------------------------------
-5.7. Generate `workflows*.lst` config file from the all latest backed up
+5.7. Generate `repos.lst` and `repos-auth.lst` config files from the latest
+     backed up RestAPI JSON file using `accounts-user.lst` config file
+-------------------------------------------------------------------------------
+To be able to backup multiple user repository lists and/or generate `repos.lst`
+and `repos-auth.lst` config files, update these configuration files:
+
+  * `accounts-user.lst`
+
+To be able to backup multiple organization repository lists, update these
+configuration files:
+
+  * `accounts-org.lst`
+
+To backup a single user repository list:
+
+  >
+  backup_restapi_user_repos_list.bat ...
+
+To backup a single organization repository list:
+
+  >
+  backup_restapi_org_repos_list.bat ...
+
+To backup multiple user repository lists:
+
+  >
+  backup_restapi_all_user_repos_list.bat
+
+To backup multiple organization repository lists:
+
+  >
+  backup_restapi_all_org_repos_list.bat
+
+To generate `repos.lst` and `repos-auth.lst` config files:
+
+  >
+  gen_repos_config_from_last_backup.bat ...
+
+  NOTE:
+    The only authenticated user repository list is used because of the issue
+    in the `KNOWN ISSUES` section:
+    > The `backup_restapi_user_repos_list.bat` script does return incomplete
+    > RestAPI JSON response. Not all the public repositories is returned.
+
+NOTE:
+  All the `gen_*.bat` scripts does output into `gen` subdirectory of the
+  configuration files output directory. You must compare and merge the output
+  with the respective initial configuration file manually.
+
+-------------------------------------------------------------------------------
+5.8. Generate `workflows*.lst` config file from the all latest backed up
      RestAPI JSON files using `repos-auth-with-workflows.lst` and
      `repos-with-workflows.lst` config files
 -------------------------------------------------------------------------------

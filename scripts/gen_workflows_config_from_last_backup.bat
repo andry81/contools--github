@@ -4,12 +4,13 @@ rem USAGE:
 rem   gen_workflows_config_from_last_backup.bat [<Flags>]
 
 rem Description:
-rem   Script generates `workflows.lst` config file into `gen` subdirectory of
+rem   Script generates `workflows*.lst` config file into `gen` subdirectory of
 rem   the output config directory from the all latest backed up RestAPI JSON
 rem   files using `repos-auth-with-workflows.lst` and
 rem   `repos-with-workflows.lst` config files.
-rem   The user can later compare the new `workflows.lst` config file with the
-rem   used `workflows.lst` config file to merge the difference into the latter.
+rem   The user can later compare the new `workflows*.lst` config file with the
+rem   basic `workflows*.lst` config file to merge the difference into the
+rem   latter.
 
 rem <Flags>:
 rem   -skip-sort
@@ -74,14 +75,16 @@ if defined FLAG (
 
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%/gen" || exit /b
 
-set "GEN_FILE_NAME_SUFFIX="
-
-if %FLAG_FILTER_INACTIVE% NEQ 0 (
+if %FLAG_FILTER_INACTIVE% EQU 0 (
+  set "GEN_FILE_NAME_SUFFIX="
+  set "GEN_FILE_COMMENT_LINE=# list of workflows in format: <owner>/<repo>:<workflow-id>"
+) else (
   set "GEN_FILE_NAME_SUFFIX=-inactive"
+  set "GEN_FILE_COMMENT_LINE=# list of inactive workflows in format: <owner>/<repo>:<workflow-id>"
 )
 
 (
-  for /F "eol= tokens=* delims=" %%i in ("# list of workflows in format: <owner>/<repo>:<workflow-id>") do echo.%%i
+  for /F "eol= tokens=* delims=" %%i in ("%GEN_FILE_COMMENT_LINE%") do echo.%%i
   echo.
 
   call "%%?~dp0%%print_repo_workflows_from_last_backup_by_config.bat"%%BARE_FLAGS%% -print-owner-repo-prefix -- "repos-auth-with-workflows.lst"

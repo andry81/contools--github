@@ -1,3 +1,13 @@
+2024.05.31:
+* fixed: scripts/print_repo_workflows_from_last_backup_by_config.bat: execution fixup
+* new: scripts/gen_repos_config_from_last_backup.bat: script to generate `repos.lst` and `repos-auth.lst` config files from the latest backed up RestAPI JSON file using `accounts-user.lst` config file
+* new: scripts/print_repo_from_restapi_json.bat: `-filter-forked` to filter forked repositories only
+* new: scripts/print_repo_from_restapi_json.bat: `-filter-auth` to filter authenticated repositories only
+* new: scripts/print_repo_from_restapi_json.bat: `-print-full-name` to print `full_name` field instead of `html_url` as by default
+* new: _config/repos-forked-parent.lst.in: list of forked as parent repositories
+* changed: README_EN.txt: readme update
+* refactor: _config/repos-forked.lst.in: renamed from `repos-forks.lst.in`
+
 2024.05.26:
 * new: scripts/enable_restapi_workflows.bat: `-use-inactive` to use not "active" repositories from `workflows-inactive.lst` config file
 * changed: README_EN.txt: readme update
