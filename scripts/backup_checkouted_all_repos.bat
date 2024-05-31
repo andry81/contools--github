@@ -12,11 +12,15 @@ rem   with submodules recursion.
 rem <Flags>:
 rem   --
 rem     Stop flags parse.
-rem   -skip-forks-list
-rem     Skip backup forked repositories in the fork list file.
+rem   -skip-repos-list
+rem     Skip backup repositories in the repositories list file.
+rem   -skip-repos-forked-list
+rem     Skip backup forked as child repositories in the fork list file.
 rem     Note:
 rem       All forked repositories must be properly synchronized with the parent
 rem       repository before each new backup.
+rem   -skip-repos-forked-parent-list
+rem     Skip backup forked as parent repositories in the fork list file.
 rem   -exit-on-error
 rem     Don't continue on error.
 
@@ -53,7 +57,9 @@ exit /b
 
 :MAIN_IMPL
 rem script flags
-set FLAG_SKIP_FORKS_LIST=0
+set FLAG_SKIP_REPOS_LIST=0
+set FLAG_SKIP_REPOS_FORKED_LIST=0
+set FLAG_SKIP_REPOS_FORKED_PARENT_LIST=0
 set FLAG_EXIT_ON_ERROR=0
 
 :FLAGS_LOOP
@@ -65,8 +71,12 @@ if defined FLAG ^
 if not "%FLAG:~0,1%" == "-" set "FLAG="
 
 if defined FLAG (
-  if "%FLAG%" == "-skip-forks-list" (
-    set FLAG_SKIP_FORKS_LIST=1
+  if "%FLAG%" == "-skip-repos-list" (
+    set FLAG_SKIP_REPOS_LIST=1
+  ) else if "%FLAG%" == "-skip-repos-forked-list" (
+    set FLAG_SKIP_REPOS_FORKED_LIST=1
+  ) else if "%FLAG%" == "-skip-repos-forked-parent-list" (
+    set FLAG_SKIP_REPOS_FORKED_PARENT_LIST=1
   ) else if "%FLAG%" == "-exit-on-error" (
     set FLAG_EXIT_ON_ERROR=1
   ) else if not "%FLAG%" == "--" (
@@ -90,9 +100,18 @@ if defined FROM_CMD (
   set SKIPPING_CMD=1
 )
 
-set REPO_LISTS="%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/repos.lst"
+set "REPO_LISTS="
 
-if %FLAG_SKIP_FORKS_LIST% EQU 0 (
+if %FLAG_SKIP_REPOS_LIST% EQU 0 (
+  set REPO_LISTS="%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/repos.lst"
+)
+
+rem backup forked as parent at first
+if %FLAG_SKIP_REPOS_FORKED_PARENT_LIST% EQU 0 (
+  set REPO_LISTS=%REPO_LISTS% "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/repos-forked-parent.lst"
+)
+
+if %FLAG_SKIP_REPOS_FORKED_LIST% EQU 0 (
   set REPO_LISTS=%REPO_LISTS% "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/repos-forked.lst"
 )
 

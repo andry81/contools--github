@@ -1,4 +1,13 @@
 2024.05.31:
+* fixed: scripts/print_repos_from_last_backup_by_config.bat: minor fixup
+* new: scripts/gen_repos_forked_config_from_last_backup.bat: script to generate `repos-forked.lst` config file from the latest backed up RestAPI JSON file using `accounts-user.lst` config file
+* new: scripts/gen_repos_forked_parent_config_from_last_backup.bat: script to generate `repos-forked-parent.lst` config file from the latest backed up RestAPI JSON file using `repos-forked.lst` config file
+* new: scripts/gen_repos_config_from_last_backup.bat: `-filter-forked-parent` to filter forked parent repositories only
+* new: scripts/backup_restapi_all_repo_forked_info_only.bat: forked repo info response backup script
+* new: scripts: backup_restapi_all.bat, backup_checkouted_all_repos.bat, backup_bare_all_repos.bat: `-skip-repos-list`, `-skip-repos-forked-list`, `-skip-repos-forked-parent-list` to skip respective repository list separately to each other
+* changed: README_EN.txt: readme update
+
+2024.05.31:
 * fixed: scripts/print_repo_workflows_from_last_backup_by_config.bat: execution fixup
 * new: scripts/gen_repos_config_from_last_backup.bat: script to generate `repos.lst` and `repos-auth.lst` config files from the latest backed up RestAPI JSON file using `accounts-user.lst` config file
 * new: scripts/print_repo_from_restapi_json.bat: `-filter-forked` to filter forked repositories only

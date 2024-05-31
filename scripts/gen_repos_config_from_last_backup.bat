@@ -16,7 +16,10 @@ rem   -skip-sort
 rem     Skip repository list alphabetic sort and print as is from the
 rem     json file.
 rem   -filter-forked
-rem     Filter only forked repositories.
+rem     Filter only forked as child repositories.
+rem   -filter-forked-parent
+rem     Filter only forked as parent repositories.
+rem     Has no effect if `-filter-forked` is used.
 
 setlocal
 
@@ -38,6 +41,7 @@ exit /b %LAST_ERROR%
 rem script flags
 set FLAG_SKIP_SORT=0
 set FLAG_FILTER_FORKED=0
+set FLAG_FILTER_FORKED_PARENT=0
 set "BARE_FLAGS="
 
 :FLAGS_LOOP
@@ -51,10 +55,12 @@ if not "%FLAG:~0,1%" == "-" set "FLAG="
 if defined FLAG (
   if "%FLAG%" == "-skip-sort" (
     set FLAG_SKIP_SORT=1
-    set BARE_FLAGS=%BARE_FLAGS% -skip-sort
+    set BARE_FLAGS=%BARE_FLAGS% %FLAG%
   ) else if "%FLAG%" == "-filter-forked" (
     set FLAG_FILTER_FORKED=1
-    set BARE_FLAGS=%BARE_FLAGS% -filter-forked
+    set BARE_FLAGS=%BARE_FLAGS% %FLAG%
+  ) else if "%FLAG%" == "-filter-forked-parent" (
+    set FLAG_FILTER_FORKED_PARENT=1
   ) else (
     echo.%?~nx0%: error: invalid flag: %FLAG%
     exit /b -255
@@ -69,19 +75,28 @@ if defined FLAG (
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%/gen" || exit /b
 
 if %FLAG_FILTER_FORKED% EQU 0 (
-  (
-    for /F "eol= tokens=* delims=" %%i in ("# list of repositories in format: <owner>/<repo>") do echo.%%i
-    echo.
+  if %FLAG_FILTER_FORKED_PARENT% EQU 0 (
+    (
+      for /F "eol= tokens=* delims=" %%i in ("# list of repositories in format: <owner>/<repo>") do echo.%%i
+      echo.
 
-    call "%%?~dp0%%print_repos_from_last_backup_by_config.bat"%%BARE_FLAGS%% -print-full-name -filter-source -- "accounts-user.lst"
-  ) > "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/gen/repos.lst"
+      call "%%?~dp0%%print_repos_from_last_backup_by_config.bat"%%BARE_FLAGS%% -print-full-name -filter-source -- "accounts-user.lst"
+    ) > "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/gen/repos.lst"
 
-  (
-    for /F "eol= tokens=* delims=" %%i in ("# list of required authentication repositories in format: <owner>/<repo>") do echo.%%i
-    echo.
+    (
+      for /F "eol= tokens=* delims=" %%i in ("# list of required authentication repositories in format: <owner>/<repo>") do echo.%%i
+      echo.
 
-    call "%%?~dp0%%print_repos_from_last_backup_by_config.bat"%%BARE_FLAGS%% -print-full-name -filter-source -filter-auth -- "accounts-user.lst"
-  ) > "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/gen/repos-auth.lst"
+      call "%%?~dp0%%print_repos_from_last_backup_by_config.bat"%%BARE_FLAGS%% -print-full-name -filter-source -filter-auth -- "accounts-user.lst"
+    ) > "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/gen/repos-auth.lst"
+  ) else (
+    (
+      for /F "eol= tokens=* delims=" %%i in ("# list of forked as parent repositories in format: <owner>/<repo>") do echo.%%i
+      echo.
+
+      call "%%?~dp0%%print_repos_forked_parent_from_last_backup_by_config.bat"%%BARE_FLAGS%% -print-full-name -- "repos-forked.lst"
+    ) > "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/gen/repos-forked-parent.lst"
+  )
 ) else (
   (
     for /F "eol= tokens=* delims=" %%i in ("# list of forked as child repositories in format: <owner>/<repo>") do echo.%%i

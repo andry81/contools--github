@@ -14,12 +14,16 @@ rem   -skip-auth-repo-list
 rem     Skip request to private repositories in the auth repo list file.
 rem   -skip-account-lists
 rem     Skip request to accounts in the account list file.
-rem   -skip-forks-list
-rem     Skip request to forked repositories in the forks list file.
+rem   -skip-repos-list
+rem     Skip request to repositories in the repositories list file.
+rem   -skip-repos-forked-list
+rem     Skip request to forked as child repositories in the forks list file.
+rem   -skip-repos-forked-parent-list
+rem     Skip request to forked as parent repositories in the forks list file.
 rem   -query-repo-info-only
 rem     Request only repository information (including parent repository
-rem     address) avoding repository else like repo stargazers, subscribers,
-rem     forks and releases.
+rem     address) avoding repository else data like repo stargazers,
+rem     subscribers, forks and releases.
 rem   -exit-on-error
 rem     Don't continue on error.
 
@@ -58,7 +62,9 @@ exit /b
 rem script flags
 set FLAG_SKIP_AUTH_REPO_LIST=0
 set FLAG_SKIP_ACCOUNT_LISTS=0
-set FLAG_SKIP_FORKS_LIST=0
+set FLAG_SKIP_REPOS_LIST=0
+set FLAG_SKIP_REPOS_FORKED_LIST=0
+set FLAG_SKIP_REPOS_FORKED_PARENT_LIST=0
 set FLAG_QUERY_REPO_INFO_ONLY=0
 set FLAG_EXIT_ON_ERROR=0
 
@@ -75,8 +81,12 @@ if defined FLAG (
     set FLAG_SKIP_AUTH_REPO_LIST=1
   ) else if "%FLAG%" == "-skip-account-lists" (
     set FLAG_SKIP_ACCOUNT_LISTS=1
-  ) else if "%FLAG%" == "-skip-forks-list" (
-    set FLAG_SKIP_FORKS_LIST=1
+  ) else if "%FLAG%" == "-skip-repos-list" (
+    set FLAG_SKIP_REPOS_LIST=1
+  ) else if "%FLAG%" == "-skip-repos-forked-list" (
+    set FLAG_SKIP_REPOS_FORKED_LIST=1
+  ) else if "%FLAG%" == "-skip-repos-forked-parent-list" (
+    set FLAG_SKIP_REPOS_FORKED_PARENT_LIST=1
   ) else if "%FLAG%" == "-query-repo-info-only" (
     set FLAG_QUERY_REPO_INFO_ONLY=1
   ) else if "%FLAG%" == "-exit-on-error" (
@@ -186,9 +196,18 @@ for /F "usebackq eol=# tokens=* delims=" %%i in ("%CONTOOLS_GITHUB_PROJECT_OUTPU
 
 :SKIP_ACCOUNT_LISTS
 
-set REPO_LISTS="%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/repos.lst"
+set "REPO_LISTS="
 
-if %FLAG_SKIP_FORKS_LIST% EQU 0 (
+if %FLAG_SKIP_REPOS_LIST% EQU 0 (
+  set REPO_LISTS="%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/repos.lst"
+)
+
+rem request forked as parent at first
+if %FLAG_SKIP_REPOS_FORKED_PARENT_LIST% EQU 0 (
+  set REPO_LISTS=%REPO_LISTS% "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/repos-forked-parent.lst"
+)
+
+if %FLAG_SKIP_REPOS_FORKED_LIST% EQU 0 (
   set REPO_LISTS=%REPO_LISTS% "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/repos-forked.lst"
 )
 
