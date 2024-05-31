@@ -1,0 +1,14 @@
+[submodule "contools"]
+  path = _externals/contools
+  url = https://github.com/andry81/contools
+  shallow = true
+
+[submodule "gnuwin32"]
+  path = _externals/gnuwin32
+  url = https://github.com/andry81-3dparty/external-tools--gnuwin32
+  branch = 20101227
+
+[submodule "7zip"]
+  path = _externals/7zip
+  url = https://github.com/andry81-3dparty/external-tools--7zip
+  branch = 22_01_release
