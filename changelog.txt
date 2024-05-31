@@ -1,4 +1,7 @@
 2024.05.31:
+* changed: README.md: git submodules notice
+
+2024.05.31:
 * fixed: scripts/print_repos_from_last_backup_by_config.bat: minor fixup
 * new: scripts/gen_repos_forked_config_from_last_backup.bat: script to generate `repos-forked.lst` config file from the latest backed up RestAPI JSON file using `accounts-user.lst` config file
 * new: scripts/gen_repos_forked_parent_config_from_last_backup.bat: script to generate `repos-forked-parent.lst` config file from the latest backed up RestAPI JSON file using `repos-forked.lst` config file
