@@ -61,4 +61,10 @@ once GIT_CHECKOUTED_REPO_BACKUP_USE_TIMEOUT_MS  =%GIT_BARE_REPO_BACKUP_USE_TIMEO
 # timeout between restapi workflow enable
 once GH_RESTAPI_WORKFLOW_ENABLE_USE_TIMEOUT_MS  =5000
 
+# Use alternative temporary directory:
+#   default - use basic temporary directory
+#   log     - create temporary directory inside the log directory
+once MAKE_GIT_CLONE_TEMP_DIR_IN                 =log
+once MAKE_7ZIP_WORK_DIR_IN                      =log
+
 once CHCP                                       =65001

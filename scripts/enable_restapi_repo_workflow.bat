@@ -130,7 +130,7 @@ call set "GH_ENABLE_RESTAPI_REPO_WORKFLOW_FILE=%%GH_ENABLE_RESTAPI_REPO_WORKFLOW
 
 echo.Archiving backup directory...
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_WORKFLOW_OUTPUT_DIR%%" && ^
-call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_WORKFLOW_TEMP_DIR%%" "*" "%%GH_WORKFLOW_OUTPUT_DIR%%/%%GH_ENABLE_RESTAPI_REPO_WORKFLOW_FILE%%.7z" -sdel || exit /b 20
+call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_WORKFLOW_TEMP_DIR%%" "*" "%%GH_WORKFLOW_OUTPUT_DIR%%/%%GH_ENABLE_RESTAPI_REPO_WORKFLOW_FILE%%.7z" -sdel%%_7ZIP_BARE_FLAGS%% || exit /b 20
 echo.
 
 exit /b 0

@@ -125,7 +125,7 @@ call set "GH_BACKUP_RESTAPI_REPO_FORKS_FILE=%%GH_BACKUP_RESTAPI_REPO_FORKS_FILE:
 
 echo.Archiving backup directory...
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_BACKUP_OUTPUT_DIR%%" && ^
-call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_BACKUP_TEMP_DIR%%" "*" "%%GH_BACKUP_OUTPUT_DIR%%/%%GH_BACKUP_RESTAPI_REPO_FORKS_FILE%%.7z" -sdel || exit /b 20
+call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_BACKUP_TEMP_DIR%%" "*" "%%GH_BACKUP_OUTPUT_DIR%%/%%GH_BACKUP_RESTAPI_REPO_FORKS_FILE%%.7z" -sdel%%_7ZIP_BARE_FLAGS%% || exit /b 20
 echo.
 
 exit /b 0

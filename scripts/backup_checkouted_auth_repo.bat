@@ -75,7 +75,15 @@ if not defined REPO (
 
 set "QUERY_TEMP_FILE=%SCRIPT_TEMP_CURRENT_DIR%\query.txt"
 
-set "GH_BACKUP_TEMP_DIR=%SCRIPT_TEMP_CURRENT_DIR%\backup\checkouted"
+set "PROJECT_LOG_TEMP_DIR="
+
+if defined PROJECT_LOG_DIR (
+  set "PROJECT_LOG_TEMP_DIR=%PROJECT_LOG_DIR%\tmp"
+  if /i "%MAKE_GIT_CLONE_TEMP_DIR_IN%" == "log" set "GH_BACKUP_TEMP_DIR=%PROJECT_LOG_DIR%\tmp\backup\checkouted"
+  if /i "%MAKE_7ZIP_WORK_DIR_IN%" == "log" set "_7ZIP_BARE_FLAGS=%_7ZIP_BARE_FLAGS% -w%PROJECT_LOG_DIR%\tmp"
+)
+
+if not defined GH_BACKUP_TEMP_DIR set "GH_BACKUP_TEMP_DIR=%SCRIPT_TEMP_CURRENT_DIR%\backup\checkouted"
 
 set "GH_BACKUP_OUTPUT_TEMP_DIR=%GH_BACKUP_TEMP_DIR%/repo/%OWNER%/%REPO%"
 set "GH_BACKUP_OUTPUT_DIR=%GH_BACKUP_CHECKOUTED_REPO_DIR%/%OWNER%/%REPO%"
@@ -101,7 +109,12 @@ call set "GH_BACKUP_CHECKOUTED_AUTH_REPO_FILE=%%GH_BACKUP_CHECKOUTED_AUTH_REPO_F
 
 echo.Archiving backup directory...
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_BACKUP_OUTPUT_DIR%%" && ^
-call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_BACKUP_TEMP_DIR%%" "*" "%%GH_BACKUP_OUTPUT_DIR%%/%%GH_BACKUP_CHECKOUTED_AUTH_REPO_FILE%%.7z" -sdel || exit /b 20
+call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_BACKUP_TEMP_DIR%%" "*" "%%GH_BACKUP_OUTPUT_DIR%%/%%GH_BACKUP_CHECKOUTED_AUTH_REPO_FILE%%.7z" -sdel%%_7ZIP_BARE_FLAGS%%
+set LAST_ERROR=%ERRORLEVEL%
+
+if defined PROJECT_LOG_TEMP_DIR rmdir /S /Q "%PROJECT_LOG_TEMP_DIR%" >nul 2>nul
+
+if %LAST_ERROR% NEQ 0 exit /b 20
 echo.
 
 exit /b 0

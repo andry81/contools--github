@@ -43,7 +43,6 @@ exit /b %LAST_ERROR%
 :MAIN
 rem script flags
 set FLAG_CHECKOUT=0
-set FLAG_EXIT_ON_ERROR=0
 
 :FLAGS_LOOP
 
@@ -56,8 +55,6 @@ if not "%FLAG:~0,1%" == "-" set "FLAG="
 if defined FLAG (
   if "%FLAG%" == "-checkout" (
     set FLAG_CHECKOUT=1
-  ) else if "%FLAG%" == "-exit-on-error" (
-    set FLAG_EXIT_ON_ERROR=1
   ) else if not "%FLAG%" == "--" (
     echo.%?~nx0%: error: invalid flag: %FLAG%
     exit /b -255
@@ -84,7 +81,15 @@ if not defined REPO (
 
 set "QUERY_TEMP_FILE=%SCRIPT_TEMP_CURRENT_DIR%\query.txt"
 
-set "GH_BACKUP_TEMP_DIR=%SCRIPT_TEMP_CURRENT_DIR%\backup\bare"
+set "PROJECT_LOG_TEMP_DIR="
+
+if defined PROJECT_LOG_DIR (
+  set "PROJECT_LOG_TEMP_DIR=%PROJECT_LOG_DIR%\tmp"
+  if /i "%MAKE_GIT_CLONE_TEMP_DIR_IN%" == "log" set "GH_BACKUP_TEMP_DIR=%PROJECT_LOG_DIR%\tmp\backup\bare"
+  if /i "%MAKE_7ZIP_WORK_DIR_IN%" == "log" set "_7ZIP_BARE_FLAGS=%_7ZIP_BARE_FLAGS% -w%PROJECT_LOG_DIR%\tmp"
+)
+
+if not defined GH_BACKUP_TEMP_DIR set "GH_BACKUP_TEMP_DIR=%SCRIPT_TEMP_CURRENT_DIR%\backup\bare"
 
 set "GH_BACKUP_OUTPUT_TEMP_DIR=%GH_BACKUP_TEMP_DIR%/repo/%OWNER%/%REPO%"
 set "GH_BACKUP_OUTPUT_DIR=%GH_BACKUP_BARE_REPO_DIR%/%OWNER%/%REPO%"
@@ -128,7 +133,12 @@ call set "GH_BACKUP_BARE_AUTH_REPO_FILE=%%GH_BACKUP_BARE_AUTH_REPO_FILE:{{DATE_T
 
 echo.Archiving backup directory...
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_BACKUP_OUTPUT_DIR%%" && ^
-call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_BACKUP_TEMP_DIR%%" "*" "%%GH_BACKUP_OUTPUT_DIR%%/%%GH_BACKUP_BARE_AUTH_REPO_FILE%%.7z" -sdel || exit /b 20
+call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_BACKUP_TEMP_DIR%%" "*" "%%GH_BACKUP_OUTPUT_DIR%%/%%GH_BACKUP_BARE_AUTH_REPO_FILE%%.7z" -sdel%%_7ZIP_BARE_FLAGS%%
+set LAST_ERROR=%ERRORLEVEL%
+
+if defined PROJECT_LOG_TEMP_DIR rmdir /S /Q "%PROJECT_LOG_TEMP_DIR%" >nul 2>nul
+
+if %LAST_ERROR% NEQ 0 exit /b 20
 echo.
 
 exit /b 0
