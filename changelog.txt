@@ -1,4 +1,7 @@
 2024.06.03:
+* fixed: scripts: backup_bare_*repo.bat, backup_checkouted_*repo.bat: archive skip in case of `git clone` not critical error
+
+2024.06.03:
 * new: scripts: `_7ZIP_BARE_FLAGS` environment variable, to be able to add `7zip` flags
 * new: _config/config.0.vars.in, scripts/backup_*_repo.bat: `MAKE_GIT_CLONE_TEMP_DIR_IN` config variable, to retarget `git clone` command temporary directory
 * new: _config/config.0.vars.in, scripts/backup_*_repo.bat: `MAKE_7ZIP_WORK_DIR_IN` config variable, to retarget `7zip` command temporary directory

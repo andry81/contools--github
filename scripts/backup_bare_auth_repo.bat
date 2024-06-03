@@ -106,7 +106,9 @@ if %HAS_AUTH_USER% EQU 0 (
   exit /b 255
 ) >&2
 
-call :GIT clone --config core.longpaths=true -v --bare --mirror --recurse-submodules --progress "https://%%GH_AUTH_PASS%%@github.com/%%OWNER%%/%%REPO%%" "%%GH_BACKUP_OUTPUT_TEMP_DIR%%/db" || goto MAIN_EXIT
+call :GIT clone --config core.longpaths=true -v --bare --mirror --recurse-submodules --progress "https://%%GH_AUTH_PASS%%@github.com/%%OWNER%%/%%REPO%%" "%%GH_BACKUP_OUTPUT_TEMP_DIR%%/db"
+set LAST_ERROR=%ERRORLEVEL%
+
 echo.
 
 if %FLAG_CHECKOUT% EQU 0 goto SKIP_CHECKOUT
@@ -115,7 +117,7 @@ pushd "%GH_BACKUP_OUTPUT_TEMP_DIR%/db" && (
   call :GIT config --bool core.bare false
   echo.
 
-  call :GIT clone --config core.longpaths=true -v --recurse-submodules --progress "%%GH_BACKUP_OUTPUT_TEMP_DIR%%/db" "%%GH_BACKUP_OUTPUT_TEMP_DIR%%/wc" || ( popd & goto MAIN_EXIT )
+  call :GIT clone --config core.longpaths=true -v --recurse-submodules --progress "%%GH_BACKUP_OUTPUT_TEMP_DIR%%/db" "%%GH_BACKUP_OUTPUT_TEMP_DIR%%/wc" || call set LAST_ERROR=%%ERRORLEVEL%%
   echo.
 
   popd
@@ -123,6 +125,11 @@ pushd "%GH_BACKUP_OUTPUT_TEMP_DIR%/db" && (
 
 :SKIP_CHECKOUT
 
+if exist "%GH_BACKUP_OUTPUT_TEMP_DIR%/db/config" goto ARCHIVE
+if exist "%GH_BACKUP_OUTPUT_TEMP_DIR%/wc/.git/config" goto ARCHIVE
+goto SKIP_ARCHIVE
+
+:ARCHIVE
 if %FLAG_CHECKOUT% NEQ 0 (
   set "GH_BACKUP_BARE_AUTH_REPO_FILE=%GH_BACKUP_BARED_CHECKOUT_AUTH_REPO_FILE_NAME%"
 ) else set "GH_BACKUP_BARE_AUTH_REPO_FILE=%GH_BACKUP_BARE_AUTH_REPO_FILE_NAME%"
@@ -136,17 +143,10 @@ call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_BACKUP_OUTPUT_D
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_BACKUP_TEMP_DIR%%" "*" "%%GH_BACKUP_OUTPUT_DIR%%/%%GH_BACKUP_BARE_AUTH_REPO_FILE%%.7z" -sdel%%_7ZIP_BARE_FLAGS%%
 set LAST_ERROR=%ERRORLEVEL%
 
+echo.
+
+:SKIP_ARCHIVE
 if defined PROJECT_LOG_TEMP_DIR rmdir /S /Q "%PROJECT_LOG_TEMP_DIR%" >nul 2>nul
-
-if %LAST_ERROR% NEQ 0 exit /b 20
-echo.
-
-exit /b 0
-
-:MAIN_EXIT
-set LAST_ERROR=%ERRORLEVEL%
-
-echo.
 
 exit /b %LAST_ERROR%
 

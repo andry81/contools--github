@@ -93,9 +93,16 @@ set "GH_BACKUP_OUTPUT_DIR=%GH_BACKUP_CHECKOUTED_REPO_DIR%/%OWNER%/%REPO%"
 
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir.bat" "%%GH_BACKUP_OUTPUT_TEMP_DIR%%" >nul || exit /b 255
 
-call :GIT clone --config core.longpaths=true -v --recurse-submodules --progress "https://github.com/%%OWNER%%/%%REPO%%" "%%GH_BACKUP_OUTPUT_TEMP_DIR%%" || goto MAIN_EXIT
+call :GIT clone --config core.longpaths=true -v --recurse-submodules --progress "https://github.com/%%OWNER%%/%%REPO%%" "%%GH_BACKUP_OUTPUT_TEMP_DIR%%"
+set LAST_ERROR=%ERRORLEVEL%
+
 echo.
 
+if exist "%GH_BACKUP_OUTPUT_TEMP_DIR%/db/config" goto ARCHIVE
+if exist "%GH_BACKUP_OUTPUT_TEMP_DIR%/wc/.git/config" goto ARCHIVE
+goto SKIP_ARCHIVE
+
+:ARCHIVE
 call set "GH_BACKUP_CHECKOUTED_REPO_FILE=%%GH_BACKUP_CHECKOUTED_REPO_FILE_NAME:{{OWNER}}=%OWNER%%%"
 call set "GH_BACKUP_CHECKOUTED_REPO_FILE=%%GH_BACKUP_CHECKOUTED_REPO_FILE:{{REPO}}=%REPO%%%"
 call set "GH_BACKUP_CHECKOUTED_REPO_FILE=%%GH_BACKUP_CHECKOUTED_REPO_FILE:{{DATE_TIME}}=%PROJECT_LOG_FILE_NAME_DATE_TIME%%%"
@@ -105,17 +112,10 @@ call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_BACKUP_OUTPUT_D
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_BACKUP_TEMP_DIR%%" "*" "%%GH_BACKUP_OUTPUT_DIR%%/%%GH_BACKUP_CHECKOUTED_REPO_FILE%%.7z" -sdel%%_7ZIP_BARE_FLAGS%%
 set LAST_ERROR=%ERRORLEVEL%
 
+echo.
+
+:SKIP_ARCHIVE
 if defined PROJECT_LOG_TEMP_DIR rmdir /S /Q "%PROJECT_LOG_TEMP_DIR%" >nul 2>nul
-
-if %LAST_ERROR% NEQ 0 exit /b 20
-echo.
-
-exit /b 0
-
-:MAIN_EXIT
-set LAST_ERROR=%ERRORLEVEL%
-
-echo.
 
 exit /b %LAST_ERROR%
 
