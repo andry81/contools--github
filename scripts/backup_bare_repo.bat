@@ -13,6 +13,9 @@ rem   --
 rem     Stop flags parse.
 rem   -checkout
 rem     Additionally execute git checkout with recursion to backup submodules.
+rem   -temp-dir <temp-dir>
+rem     Retarget all temporary directories into <temp-dir>.
+rem     Useful in case of clone and/or archive large repositories.
 
 rem <OWNER>:
 rem   Owner name of a repository.
@@ -42,6 +45,7 @@ exit /b %LAST_ERROR%
 :MAIN
 rem script flags
 set FLAG_CHECKOUT=0
+set "FLAG_TEMP_DIR="
 
 :FLAGS_LOOP
 
@@ -54,6 +58,9 @@ if not "%FLAG:~0,1%" == "-" set "FLAG="
 if defined FLAG (
   if "%FLAG%" == "-checkout" (
     set FLAG_CHECKOUT=1
+  ) else if "%FLAG%" == "-temp-dir" (
+    set "FLAG_TEMP_DIR=%~2"
+    shift
   ) else if not "%FLAG%" == "--" (
     echo.%?~nx0%: error: invalid flag: %FLAG%
     exit /b -255
@@ -64,6 +71,11 @@ if defined FLAG (
   rem read until no flags
   if not "%FLAG%" == "--" goto FLAGS_LOOP
 )
+
+if defined FLAG_TEMP_DIR if not exist "%FLAG_TEMP_DIR%\*" (
+  echo.%?~nx0%: error: FLAG_TEMP_DIR directory does not exist: "%FLAG_TEMP_DIR%"
+  exit /b 255
+) >&2
 
 set "OWNER=%~1"
 set "REPO=%~2"
@@ -80,18 +92,37 @@ if not defined REPO (
 
 set "QUERY_TEMP_FILE=%SCRIPT_TEMP_CURRENT_DIR%\query.txt"
 
-set "PROJECT_LOG_TEMP_DIR="
+set "TEMP_DIR="
+set "GH_BACKUP_TEMP_DIR="
 
-if defined PROJECT_LOG_DIR (
-  set "PROJECT_LOG_TEMP_DIR=%PROJECT_LOG_DIR%\tmp"
-  if /i "%MAKE_GIT_CLONE_TEMP_DIR_IN%" == "log" set "GH_BACKUP_TEMP_DIR=%PROJECT_LOG_DIR%\tmp\backup\bare"
-  if /i "%MAKE_7ZIP_WORK_DIR_IN%" == "log" set "_7ZIP_BARE_FLAGS=%_7ZIP_BARE_FLAGS% -w%PROJECT_LOG_DIR%\tmp"
+if defined FLAG_TEMP_DIR (
+  set "TEMP_DIR=%FLAG_TEMP_DIR%\tmp-%RANDOM%-%RANDOM%"
+) else if defined PROJECT_LOG_DIR (
+  if /i "%MAKE_GIT_CLONE_TEMP_DIR_IN%" == "log" (
+    set "TEMP_DIR=%PROJECT_LOG_DIR%\tmp-%RANDOM%-%RANDOM%"
+  ) else if /i "%MAKE_7ZIP_WORK_DIR_IN%" == "log" (
+    set "TEMP_DIR=%PROJECT_LOG_DIR%\tmp-%RANDOM%-%RANDOM%"
+  )
 )
+
+if defined FLAG_TEMP_DIR (
+  set "GH_BACKUP_TEMP_DIR=%TEMP_DIR%\backup\bare"
+  set _7ZIP_BARE_FLAGS=%_7ZIP_BARE_FLAGS% -w"%TEMP_DIR%"
+) else if defined PROJECT_LOG_DIR (
+  if /i "%MAKE_GIT_CLONE_TEMP_DIR_IN%" == "log" (
+    set "GH_BACKUP_TEMP_DIR=%TEMP_DIR%\backup\bare"
+  )
+  if /i "%MAKE_7ZIP_WORK_DIR_IN%" == "log" (
+    set _7ZIP_BARE_FLAGS=%_7ZIP_BARE_FLAGS% -w"%TEMP_DIR%"
+  ) else set _7ZIP_BARE_FLAGS=%_7ZIP_BARE_FLAGS% -w"%SCRIPT_TEMP_CURRENT_DIR%"
+) else set _7ZIP_BARE_FLAGS=%_7ZIP_BARE_FLAGS% -w"%SCRIPT_TEMP_CURRENT_DIR%"
 
 if not defined GH_BACKUP_TEMP_DIR set "GH_BACKUP_TEMP_DIR=%SCRIPT_TEMP_CURRENT_DIR%\backup\bare"
 
 set "GH_BACKUP_OUTPUT_TEMP_DIR=%GH_BACKUP_TEMP_DIR%/repo/%OWNER%/%REPO%"
 set "GH_BACKUP_OUTPUT_DIR=%GH_BACKUP_BARE_REPO_DIR%/%OWNER%/%REPO%"
+
+if defined TEMP_DIR call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%TEMP_DIR%%" >nul || exit /b 255
 
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir.bat" "%%GH_BACKUP_OUTPUT_TEMP_DIR%%" >nul || exit /b 255
 
@@ -107,6 +138,10 @@ pushd "%GH_BACKUP_OUTPUT_TEMP_DIR%/db" && (
   echo.
 
   call :GIT clone --config core.longpaths=true -v --recurse-submodules --progress "%%GH_BACKUP_OUTPUT_TEMP_DIR%%/db" "%%GH_BACKUP_OUTPUT_TEMP_DIR%%/wc" || call set LAST_ERROR=%%ERRORLEVEL%%
+  echo.
+
+  rem restore bare repository
+  call :GIT config --bool core.bare true
   echo.
 
   popd
@@ -135,7 +170,7 @@ set LAST_ERROR=%ERRORLEVEL%
 echo.
 
 :SKIP_ARCHIVE
-if defined PROJECT_LOG_TEMP_DIR rmdir /S /Q "%PROJECT_LOG_TEMP_DIR%" >nul 2>nul
+if defined TEMP_DIR rmdir /S /Q "%TEMP_DIR%" >nul 2>nul
 
 exit /b %LAST_ERROR%
 

@@ -1,3 +1,7 @@
+2024.06.04:
+* fixed: scripts: backup_bare_*repo.bat, backup_checkouted_*repo.bat: missed to restore bare repo state after checkout, execution fixup
+* new: scripts: backup_bare_*repo.bat, backup_checkouted_*repo.bat: `-temp-dir <temp-dir>` option to retarget all temporary directories
+
 2024.06.03:
 * fixed: scripts: backup_bare_*repo.bat, backup_checkouted_*repo.bat: archive skip in case of `git clone` not critical error
 
