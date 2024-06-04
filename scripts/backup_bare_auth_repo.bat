@@ -178,8 +178,13 @@ set LAST_ERROR=%ERRORLEVEL%
 
 echo.
 
+rem avoid command line temporary directory remove on archive error
+if %LAST_ERROR% NEQ 0 goto SKIP_TEMP_DIR_REMOVE
+
 :SKIP_ARCHIVE
 if defined TEMP_DIR rmdir /S /Q "%TEMP_DIR%" >nul 2>nul
+
+:SKIP_TEMP_DIR_REMOVE
 
 exit /b %LAST_ERROR%
 
