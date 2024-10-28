@@ -1,3 +1,6 @@
+2024.06.16:
+* fixed: __init__/script_init.bat: command line correct print
+
 2024.06.04:
 * changed: scripts: backup_bare_*repo.bat, backup_checkouted_*repo.bat: avoid command line temporary directory remove on archive error
 

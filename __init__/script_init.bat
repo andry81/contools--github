@@ -47,8 +47,8 @@ if %NEST_LVL% EQU 1 (
   if defined INIT_VARS_FILE call "%%CONTOOLS_ROOT%%/std/set_vars_from_file.bat" "%%INIT_VARS_FILE%%"
 )
 
-rem call "%%CONTOOLS_ROOT%%/std/get_cmdline.bat" %%*
-rem call "%%CONTOOLS_ROOT%%/std/echo_var.bat" RETURN_VALUE ">"
+rem call "%%CONTOOLS_ROOT%%/std/setshift.bat" 2 CMDLINE %%*
+rem call "%%CONTOOLS_ROOT%%/std/echo_var.bat" CMDLINE ">"
 rem echo.
 
 rem The caller can continue after this exit.
