@@ -133,7 +133,7 @@ for /F "usebackq eol=# tokens=1,* delims=/" %%i in (%CONFIG_FILE%) do (
     call set ?.=@dir "%%GH_BACKUP_EXTRACT_TEMP_DIR:/=\%%\repo\%%REPO_OWNER%%\%%REPO%%\*.json" /A:-D /B /O:D /S
 
     (
-      for /F "usebackq eol= tokens=* delims=" %%k in (`%%?.%%`) do (
+      for /F "usebackq tokens=* delims="eol^= %%k in (`%%?.%%`) do (
         set "JSON_FILE=%%k"
         call "%%?~dp0%%print_repo_from_restapi_json.bat"%%BARE_FLAGS%% -skip-sort -filter-parent -- "%%JSON_FILE%%" && set /A NUM_PRINTED_JSON_FILES+=1
       )
@@ -154,7 +154,7 @@ exit /b -1
 
 :EXEC_AND_RETURN_FIRST_LINE
 set "GH_BACKUP_RESTAPI_REPO_INFO_FILE="
-for /F "usebackq eol= tokens=* delims=" %%i in (`%%?.%%`) do (
+for /F "usebackq tokens=* delims="eol^= %%i in (`%%?.%%`) do (
   set "GH_BACKUP_RESTAPI_REPO_INFO_FILE=%%i"
   exit /b 0
 )

@@ -101,7 +101,7 @@ echo.
 "%JQ_EXECUTABLE%" "length" "%CURL_OUTPUT_FILE%" 2>nul > "%QUERY_TEMP_FILE%"
 
 set QUERY_LEN=0
-for /F "usebackq eol= tokens=* delims=" %%i in ("%QUERY_TEMP_FILE%") do set QUERY_LEN=%%i
+for /F "usebackq tokens=* delims="eol^= %%i in ("%QUERY_TEMP_FILE%") do set QUERY_LEN=%%i
 
 if not defined QUERY_LEN set QUERY_LEN=0
 if "%QUERY_LEN%" == "null" set QUERY_LEN=0

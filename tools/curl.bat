@@ -20,7 +20,7 @@ if %HAS_AUTH_USER%0 NEQ 0 set CURL_BARE_FLAGS=%CURL_BARE_FLAGS% --user "%USER%:%
 
 call "%%CONTOOLS_ROOT%%/std/get_cmdline.bat" "%%CURL_EXECUTABLE%%"%%CURL_BARE_FLAGS%%
 
-setlocal ENABLEDELAYEDEXPANSION & for /F "eol= tokens=* delims=" %%i in ("!RETURN_VALUE!") do endlocal & set "CURL_CMDLINE_PREFIX=%%i"
+setlocal ENABLEDELAYEDEXPANSION & for /F "tokens=* delims="eol^= %%i in ("!RETURN_VALUE!") do endlocal & set "CURL_CMDLINE_PREFIX=%%i"
 
 call "%%CONTOOLS_ROOT%%/std/get_cmdline_var_len.bat" -exe CURL_CMDLINE_PREFIX
 
@@ -28,7 +28,7 @@ set /A SKIP_COUNT=%ERRORLEVEL%
 
 call "%%CONTOOLS_ROOT%%/std/setshift.bat" -skip %%SKIP_COUNT%% 2 CURL_CMDLINE %%CURL_CMDLINE_PREFIX%% %%*
 
-setlocal ENABLEDELAYEDEXPANSION & for /F "eol= tokens=* delims=" %%i in ("!CURL_CMDLINE!") do endlocal & (
+setlocal ENABLEDELAYEDEXPANSION & for /F "tokens=* delims="eol^= %%i in ("!CURL_CMDLINE!") do endlocal & (
   echo.^>%%i
   (
     %%i

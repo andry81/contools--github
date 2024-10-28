@@ -106,12 +106,12 @@ if %FLAG_NO_PATH_PREFIX_REMOVE% NEQ 0 goto NO_PATH_PREFIX_REMOVE
 
 set "FILE_PATH_PREFIX="
 if %FLAG_PRINT_OWNER_REPO_PREFIX% NEQ 0 setlocal ENABLEDELAYEDEXPANSION & ^
-for /F "eol= tokens=* delims=" %%i in ("!REPO_OWNER!/!REPO!:") do endlocal & set "FILE_PATH_PREFIX=%%i"
+for /F "tokens=* delims="eol^= %%i in ("!REPO_OWNER!/!REPO!:") do endlocal & set "FILE_PATH_PREFIX=%%i"
 
 set NUM_PRINTED_FILE_PATH=0
 
 (
-  for /F "usebackq eol= tokens=* delims=" %%i in ("%INPUT_LIST_FILE%") do set "FILE_PATH=%%i" & call :PROCESS_PATH && set /A NUM_PRINTED_FILE_PATH+=1
+  for /F "usebackq tokens=* delims="eol^= %%i in ("%INPUT_LIST_FILE%") do set "FILE_PATH=%%i" & call :PROCESS_PATH && set /A NUM_PRINTED_FILE_PATH+=1
 ) > "%INOUT_LIST_FILE_TMP2%"
 
 type "%INOUT_LIST_FILE_TMP2%"
@@ -124,7 +124,7 @@ exit /b -1
 setlocal ENABLEDELAYEDEXPANSION
 if "!FILE_PATH:~0,18!" == ".github/workflows/" set "FILE_PATH=!FILE_PATH:~18!"
 if defined FILE_PATH (
-  for /F "eol= tokens=* delims=" %%i in ("!FILE_PATH_PREFIX!!FILE_PATH!") do endlocal & echo.%%i
+  for /F "tokens=* delims="eol^= %%i in ("!FILE_PATH_PREFIX!!FILE_PATH!") do endlocal & echo.%%i
   exit /b 0
 ) else endlocal
 exit /b -1

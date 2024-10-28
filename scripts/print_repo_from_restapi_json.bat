@@ -148,7 +148,7 @@ if %FLAG_PRINT_FULL_NAME% NEQ 0 goto NO_URL_DOMAIN_REMOVE
 if %FLAG_NO_URL_DOMAIN_REMOVE% NEQ 0 goto NO_URL_DOMAIN_REMOVE
 
 (
-  for /F "usebackq eol= tokens=* delims=" %%i in ("%INPUT_LIST_FILE%") do set "URL_PATH=%%i" & call :PROCESS_URL
+  for /F "usebackq tokens=* delims="eol^= %%i in ("%INPUT_LIST_FILE%") do set "URL_PATH=%%i" & call :PROCESS_URL
 ) > "%INOUT_LIST_FILE_TMP2%"
 
 type "%INOUT_LIST_FILE_TMP2%"
@@ -157,7 +157,7 @@ exit /b 0
 
 :PROCESS_URL
 if "%URL_PATH:~0,19%" == "https://github.com/" set "URL_PATH=%URL_PATH:~19%"
-if defined URL_PATH setlocal ENABLEDELAYEDEXPANSION & for /F "eol= tokens=* delims=" %%i in ("!URL_PATH!") do endlocal & echo.%%i
+if defined URL_PATH setlocal ENABLEDELAYEDEXPANSION & for /F "tokens=* delims="eol^= %%i in ("!URL_PATH!") do endlocal & echo.%%i
 exit /b
 
 :NO_URL_DOMAIN_REMOVE
