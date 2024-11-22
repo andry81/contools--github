@@ -55,22 +55,7 @@ if not defined LOAD_CONFIG_VERBOSE if %INIT_VERBOSE%0 NEQ 0 set LOAD_CONFIG_VERB
 if %NO_GEN%0 EQU 0 (
   call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/load_config_dir.bat" %%* -gen_user_config -- "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" || exit /b
 
-  call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" accounts-user.lst || exit /b
-  call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" accounts-org.lst || exit /b
-
-  call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" repos.lst || exit /b
-  call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" repos-auth.lst || exit /b
-
-  call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" repos-with-workflows.lst || exit /b
-  call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" repos-auth-with-workflows.lst || exit /b
-
-  call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" repos-forked.lst || exit /b
-  call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" repos-forked-parent.lst || exit /b
-
-  call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" repos-to-delete.lst || exit /b
-
-  call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" workflows.lst || exit /b
-  call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" workflows-inactive.lst || exit /b
+  call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config_dir.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" *.lst || exit /b
 ) else call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/load_config_dir.bat" %%* -- "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" || exit /b
 
 call "%%CONTOOLS_ROOT%%/std/if_var_defined_and_file_exist.bat" CURL_EXECUTABLE || (
