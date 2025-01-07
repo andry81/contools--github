@@ -1,3 +1,6 @@
+2025.01.07:
+* changed: README.md: externals note update
+
 2024.11.22:
 * changed: __init__/__init__.bat: switched to use `gen_config_dir.bat` script
 
