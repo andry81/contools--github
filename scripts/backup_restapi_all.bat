@@ -20,6 +20,9 @@ rem   -skip-repos-forked-list
 rem     Skip request to forked as child repositories in the forks list file.
 rem   -skip-repos-forked-parent-list
 rem     Skip request to forked as parent repositories in the forks list file.
+rem   -skip-repos-fork-lists
+rem     Implies `-skip-repos-forked-list` and `-skip-repos-forked-parent-list`
+rem     flags.
 rem   -query-repo-info-only
 rem     Request only repository information (including parent repository
 rem     address) avoding repository else data like repo stargazers,
@@ -86,6 +89,9 @@ if defined FLAG (
   ) else if "%FLAG%" == "-skip-repos-forked-list" (
     set FLAG_SKIP_REPOS_FORKED_LIST=1
   ) else if "%FLAG%" == "-skip-repos-forked-parent-list" (
+    set FLAG_SKIP_REPOS_FORKED_PARENT_LIST=1
+  ) else if "%FLAG%" == "-skip-repos-fork-lists" (
+    set FLAG_SKIP_REPOS_FORKED_LIST=1
     set FLAG_SKIP_REPOS_FORKED_PARENT_LIST=1
   ) else if "%FLAG%" == "-query-repo-info-only" (
     set FLAG_QUERY_REPO_INFO_ONLY=1

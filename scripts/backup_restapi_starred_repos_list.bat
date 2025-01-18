@@ -95,7 +95,7 @@ if not defined QUERY_LEN set QUERY_LEN=0
 if "%QUERY_LEN%" == "null" set QUERY_LEN=0
 
 rem just in case
-if %PAGE% GEQ 100 (
+if %PAGE% GTR %GH_RESTAPI_REQ_MAX_PAGE% (
   echo.%?~nx0%: error: too many pages, skip processing.
   goto PAGE_LOOP_END
 ) >&2

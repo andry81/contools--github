@@ -47,6 +47,8 @@ once GH_BACKUP_RESTAPI_ORG_REPOS_DIR            ="%GH_BACKUP_DIR%/restapi/repos/
 # 100 is a maximum
 once GH_RESTAPI_PARAM_PER_PAGE                  =100
 
+once GH_RESTAPI_REQ_MAX_PAGE                    =256
+
 once CURL_BARE_FLAGS                            =-H "Accept: application/vnd.github+json"
 
 # timeout between restapi backups

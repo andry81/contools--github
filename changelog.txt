@@ -1,3 +1,13 @@
+2025.01.18:
+* new: scripts/gen_inactive_workflows_config_from_last_backup.bat : standalone script to generate only inactive workflows config
+* new: scripts/enable_restapi_inactive_workflows.bat: standalone script to enable only inactive workflows
+* new: scripts/backup_restapi_all.bat: `-skip-repos-fork-lists` flag to avoid backup data for all repository fork lists
+* changed: scripts/backup_restapi_all_exclude_repos_list.bat: exclude repository fork lists
+* changed: _config, scripts: added `GH_RESTAPI_REQ_MAX_PAGE` variable to limit max RestAPI requests per url
+* changed: README_EN.txt: readme update
+* changed: TODO.txt: todo update
+* refactor: scripts: minor cleanup
+
 2025.01.07:
 * changed: README.md: externals note update
 

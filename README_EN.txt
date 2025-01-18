@@ -1,5 +1,5 @@
 * README_EN.txt
-* 2024.05.31
+* 2025.01.18
 * contools--github
 
 1. DESCRIPTION
@@ -33,6 +33,7 @@
 Github local scripts to:
 * Backup RestAPI JSON responses.
 * Backup bare or/and checkouted repositories.
+* Backup forked and fork parent repositories.
 * Delete repositories.
 * Workflow enable.
 * Generate config files from backed up RestAPI JSON files.
@@ -189,6 +190,7 @@ repos-auth.lst
 repos-auth-with-workflows.lst
 repos-forked.lst
 repos-forked-parent.lst
+repos-to-delete.lst
 repos-with-workflows.lst
 workflows.lst
 workflows-inactive.lst
@@ -218,12 +220,23 @@ To backup using previous 2 with `user repo info`, `stargazers`, `subscribers`,
   >
   backup_restapi_all.bat
 
-To backup all RestAPI JSON responses except repository list for user and
-organization accounts. Or the same as `backup_restapi_all.bat` script but
-excluding first 2 scripts:
+To backup all RestAPI JSON responses except repository list and repository fork
+lists for user and organization accounts. Or the same as
+`backup_restapi_all.bat` script but excluding first 2 scripts and, excluding
+`repos-forked.lst` and `repos-forked-parent.lst` lists:
 
   >
   backup_restapi_all_exclude_repos_list.bat
+
+NOTE:
+  Running the `backup_restapi_all*.bat` script you may backup using the old
+  repositories list instead of the latest one.
+  To use the latest repositories list read the details below in the
+  "Generate `repos.lst`, `repos-auth.lst` and `repos-forked.lst` config files
+  from the latest backed up RestAPI JSON file using `accounts-user.lst` and
+  `accounts-org.lst` config files" section.
+  Then you can run `backup_restapi_all_exclude_repos_list.bat` script to avoid
+  backup the repositories list twice.
 
 -------------------------------------------------------------------------------
 5.4. Run repositories backup
@@ -301,20 +314,21 @@ To enable a single user repository workflow:
   >
   enable_restapi_user_repo_workflow.bat ...
 
-To enable multiple user repository workflow lists:
+To enable multiple user repository workflow lists using `workflows.lst` config:
 
   >
   enable_restapi_workflows.bat ...
 
-To enable multiple inactive user repository workflow lists:
+To enable multiple inactive user repository workflow lists using
+`workflows-inactive.lst` config:
 
   >
-  enable_restapi_workflows.bat -use-inactive ...
+  enable_restapi_inactive_workflows.bat ...
 
 -------------------------------------------------------------------------------
 5.7. Generate `repos.lst`, `repos-auth.lst` and `repos-forked.lst` config files
-     from the latest backed up RestAPI JSON file using `accounts-user.lst`
-     config file
+     from the latest backed up RestAPI JSON file using `accounts-user.lst` and
+     `accounts-org.lst` config files
 -------------------------------------------------------------------------------
 To be able to backup multiple user repository lists and/or generate
 `repos.lst`, `repos-auth.lst` and `repos-forked.lst` config files,

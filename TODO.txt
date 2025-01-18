@@ -1,2 +1,4 @@
 - add script(s) to backup github issues and discussions after page scroll
   with clicks on all expand buttons and links
+
+- reduce quantity of scripts by merging script groups into a single script

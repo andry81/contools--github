@@ -12,8 +12,6 @@ rem   with submodules recursion.
 rem <Flags>:
 rem   --
 rem     Stop flags parse.
-rem   -checkout
-rem     Additionally execute git checkout with recursion to backup submodules.
 rem   -temp-dir <temp-dir>
 rem     Retarget all temporary directories into <temp-dir>.
 rem     Useful in case of clone and/or archive large repositories.
