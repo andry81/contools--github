@@ -1,3 +1,6 @@
+2025.01.20:
+* changed: scripts/print_*.bat: improved alphabetical sorting
+
 2025.01.18:
 * new: scripts/gen_inactive_workflows_config_from_last_backup.bat : standalone script to generate only inactive workflows config
 * new: scripts/enable_restapi_inactive_workflows.bat: standalone script to enable only inactive workflows

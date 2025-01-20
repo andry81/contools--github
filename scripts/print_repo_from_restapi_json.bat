@@ -30,7 +30,7 @@ rem   -comment-private
 rem     Comment private repositories.
 rem     Has no effect if `-filter-auth` is used.
 
-setlocal
+setlocal DISABLEDELAYEDEXPANSION
 
 call "%%~dp0../__init__/script_init.bat" print . %%0 %%* || exit /b
 if %IMPL_MODE%0 EQU 0 exit /b
@@ -139,11 +139,32 @@ if %FLAG_FILTER_SOURCE% EQU 0 (
 
 set "INPUT_LIST_FILE=%INOUT_LIST_FILE_TMP0%"
 
-if %FLAG_SKIP_SORT% EQU 0 (
-  set "INPUT_LIST_FILE=%INOUT_LIST_FILE_TMP1%"
-  sort "%INOUT_LIST_FILE_TMP0%" /O "%INOUT_LIST_FILE_TMP1%"
-)
+if %FLAG_SKIP_SORT% NEQ 0 goto SKIP_SORT
 
+(
+  for /F "usebackq tokens=* delims="eol^= %%i in ("%INOUT_LIST_FILE_TMP0%") do set "URL_PATH=%%i" & call :ENCODE_URL
+) > "%INOUT_LIST_FILE_TMP1%"
+
+"%SystemRoot%\System32\sort.exe" /L C "%INOUT_LIST_FILE_TMP1%" /O "%INOUT_LIST_FILE_TMP0%"
+
+(
+  for /F "usebackq tokens=* delims="eol^= %%i in ("%INOUT_LIST_FILE_TMP0%") do set "URL_PATH=%%i" & call :DECODE_URL
+) > "%INOUT_LIST_FILE_TMP1%"
+
+set "INPUT_LIST_FILE=%INOUT_LIST_FILE_TMP1%"
+
+goto SORT_END
+
+:ENCODE_URL
+setlocal ENABLEDELAYEDEXPANSION & (echo;!URL_PATH:/=/!)
+exit /b 0
+
+:DECODE_URL
+setlocal ENABLEDELAYEDEXPANSION & (echo;!URL_PATH:/=/!)
+exit /b 0
+
+:SORT_END
+:SKIP_SORT
 if %FLAG_PRINT_FULL_NAME% NEQ 0 goto NO_URL_DOMAIN_REMOVE
 if %FLAG_NO_URL_DOMAIN_REMOVE% NEQ 0 goto NO_URL_DOMAIN_REMOVE
 

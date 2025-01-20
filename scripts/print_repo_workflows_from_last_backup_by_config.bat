@@ -21,7 +21,7 @@ rem     Print `<owner>/<repo>:` prefix for each workflow.
 rem   -filter-inactive
 rem     Filter only not "active" workflows.
 
-setlocal
+setlocal DISABLEDELAYEDEXPANSION
 
 call "%%~dp0../__init__/script_init.bat" print . %%0 %%* || exit /b
 if %IMPL_MODE%0 EQU 0 exit /b
@@ -143,11 +143,8 @@ for /F "usebackq eol=# tokens=1,* delims=/" %%i in (%CONFIG_FILE%) do (
         call "%%?~dp0%%print_repo_workflows_from_restapi_json.bat"%%BARE_FLAGS%% -skip-sort -- "%%JSON_FILE%%" && set /A NUM_PRINTED_JSON_FILES+=1
       )
     ) %REDIR_LINE%
-    
-    if %FLAG_SKIP_SORT% EQU 0 (
-      sort "%INOUT_LIST_FILE_TMP0%" /O "%INOUT_LIST_FILE_TMP1%"
-      type "%INOUT_LIST_FILE_TMP1%"
-    )
+
+    if %FLAG_SKIP_SORT% EQU 0 call :SORT_AND_PRINT & type "%INOUT_LIST_FILE_TMP1%"
   )
 
   set PRINT_BLANK_LINE=1
@@ -156,6 +153,27 @@ for /F "usebackq eol=# tokens=1,* delims=/" %%i in (%CONFIG_FILE%) do (
 if %NUM_PRINTED_JSON_FILES% NEQ 0 exit /b 0
 
 exit /b -1
+
+:SORT
+(
+  for /F "usebackq tokens=* delims="eol^= %%i in ("%INOUT_LIST_FILE_TMP0%") do set "URL_PATH=%%i" & call :ENCODE_URL
+) > "%INOUT_LIST_FILE_TMP1%"
+
+"%SystemRoot%\System32\sort.exe" /L C "%INOUT_LIST_FILE_TMP1%" /O "%INOUT_LIST_FILE_TMP0%"
+
+(
+  for /F "usebackq tokens=* delims="eol^= %%i in ("%INOUT_LIST_FILE_TMP0%") do set "URL_PATH=%%i" & call :DECODE_URL
+) > "%INOUT_LIST_FILE_TMP1%"
+
+exit /b 0
+
+:ENCODE_URL
+setlocal ENABLEDELAYEDEXPANSION & (echo;!URL_PATH:/=/!)
+exit /b 0
+
+:DECODE_URL
+setlocal ENABLEDELAYEDEXPANSION & (echo;!URL_PATH:/=/!)
+exit /b 0
 
 :EXEC_AND_RETURN_FIRST_LINE
 set "GH_BACKUP_RESTAPI_REPO_WORKFLOWS_FILE="
