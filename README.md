@@ -1,11 +1,13 @@
-> **Note** To checkout externals read the details here: https://github.com/andry81/externals
+> [!NOTE]
+> To checkout externals read the details here: https://github.com/andry81/externals
 
-<p align="center">Github local scripts to:
+<p align="center">Github local scripts to:</p>
+
 * Backup RestAPI JSON responses.
 * Backup bare or/and checkouted repositories.
 * Delete repositories.
 * Workflow enable.
-* Generate config files from backed up RestAPI JSON files.</p>
+* Generate config files from backed up RestAPI JSON files.
 
 <!-- -- >
 <p align="center">
