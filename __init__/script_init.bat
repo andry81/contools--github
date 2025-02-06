@@ -8,7 +8,7 @@ if "%~1" == "print" set "REDIR_LINE=>&2"
 (
   call "%%~dp0__init__.bat" || exit /b
 
-  call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/check_vars.bat" CONTOOLS_PROJECT_ROOT PROJECT_OUTPUT_ROOT PROJECT_LOG_ROOT CONTOOLS_ROOT CONTOOLS_UTILITIES_BIN_ROOT || exit /b
+  call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/check_vars.bat" CONTOOLS_PROJECT_ROOT PROJECT_OUTPUT_ROOT PROJECT_LOG_ROOT CONTOOLS_ROOT CONTOOLS_UTILS_BIN_ROOT || exit /b
 
   call "%%CONTOOLS_ROOT%%/std/callshift.bat" -skip 1 2 call "%%CONTOOLS_ROOT%%/std/declare_builtins.bat" %%* || exit /b
 
