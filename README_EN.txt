@@ -1,31 +1,32 @@
 * README_EN.txt
-* 2025.01.18
+* 2025.02.06
 * contools--github
 
 1. DESCRIPTION
 2. LICENSE
 3. REPOSITORIES
 4. CATALOG CONTENT DESCRIPTION
-5. USAGE
-5.1. Generate config files
-5.2. Edit generated config files
-5.3. Run RestAPI JSON response backup scripts
-5.4. Run repositories backup
-5.5. Delete repositories
-5.6. Run workflows enabler
-5.7. Generate `repos.lst`, `repos-auth.lst` and `repos-forked.lst` config files
+5. EXTERNALS
+6. USAGE
+6.1. Generate config files
+6.2. Edit generated config files
+6.3. Run RestAPI JSON response backup scripts
+6.4. Run repositories backup
+6.5. Delete repositories
+6.6. Run workflows enabler
+6.7. Generate `repos.lst`, `repos-auth.lst` and `repos-forked.lst` config files
      from the latest backed up RestAPI JSON file using `accounts-user.lst`
      config file
-5.8. Generate `repos-forked-parent.lst` config file from the latest backed up
+6.8. Generate `repos-forked-parent.lst` config file from the latest backed up
      RestAPI JSON file using `repos-forked.lst` config file
-5.9. Generate `workflows*.lst` config file from the all latest backed up
+6.9. Generate `workflows*.lst` config file from the all latest backed up
      RestAPI JSON files using `repos-auth-with-workflows.lst` and
      `repos-with-workflows.lst` config files
-6. AUTHENTICATION
-7. KNOWN ISSUES
-7.1. The `backup_restapi_user_repos_list.bat` script does return incomplete
+7. AUTHENTICATION
+8. KNOWN ISSUES
+8.1. The `backup_restapi_user_repos_list.bat` script does return incomplete
      RestAPI JSON response. Not all the public repositories is returned.
-8. AUTHOR
+9. AUTHOR
 
 -------------------------------------------------------------------------------
 1. DESCRIPTION
@@ -67,6 +68,10 @@ Second mirror:
  |    #
  |    # Log files directory, where does store all log files from all scripts
  |    # including all nested projects.
+ |
+ +- /`_externals`
+ |    #
+ |    # Immediate external repositories catalog.
  |
  +- /`_config`
  |    #
@@ -167,11 +172,18 @@ Second mirror:
      # Scripts.
 
 -------------------------------------------------------------------------------
-5. USAGE
+5. EXTERNALS
+-------------------------------------------------------------------------------
+See details in `README_EN.txt` in `externals` project:
+
+https://github.com/andry81/externals
+
+-------------------------------------------------------------------------------
+6. USAGE
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
-5.1. Generate config files
+6.1. Generate config files
 -------------------------------------------------------------------------------
 
 Run:
@@ -180,7 +192,7 @@ Run:
   __init__/__init__.bat
 
 -------------------------------------------------------------------------------
-5.2. Edit generated config files
+6.2. Edit generated config files
 -------------------------------------------------------------------------------
 
 accounts-org.lst
@@ -198,7 +210,7 @@ config.0.vars
 config.1.vars
 
 -------------------------------------------------------------------------------
-5.3. Run RestAPI JSON response backup scripts
+6.3. Run RestAPI JSON response backup scripts
 -------------------------------------------------------------------------------
 
 To backup all RestAPI JSON responses for authenticated user plus accounts from
@@ -239,7 +251,7 @@ NOTE:
   backup the repositories list twice.
 
 -------------------------------------------------------------------------------
-5.4. Run repositories backup
+6.4. Run repositories backup
 -------------------------------------------------------------------------------
 
 To backup a single user repository:
@@ -288,7 +300,7 @@ To backup multiple only authenticated user repositories from `repos-auth.lst`:
   backup_*_all_auth_repos.bat ...
 
 -------------------------------------------------------------------------------
-5.5. Delete repositories
+6.5. Delete repositories
 -------------------------------------------------------------------------------
 
 To delete a single user repository:
@@ -302,7 +314,7 @@ To delete multiple user repositories from `repos-to-delete.lst`:
   delete_restapi_user_repos.bat ...
 
 -------------------------------------------------------------------------------
-5.6. Run workflows enabler
+6.6. Run workflows enabler
 -------------------------------------------------------------------------------
 
 To be able to enable multiple user repository workflow lists:
@@ -326,7 +338,7 @@ To enable multiple inactive user repository workflow lists using
   enable_restapi_inactive_workflows.bat ...
 
 -------------------------------------------------------------------------------
-5.7. Generate `repos.lst`, `repos-auth.lst` and `repos-forked.lst` config files
+6.7. Generate `repos.lst`, `repos-auth.lst` and `repos-forked.lst` config files
      from the latest backed up RestAPI JSON file using `accounts-user.lst` and
      `accounts-org.lst` config files
 -------------------------------------------------------------------------------
@@ -383,7 +395,7 @@ NOTE:
   with the respective initial configuration file manually.
 
 -------------------------------------------------------------------------------
-5.8. Generate `repos-forked-parent.lst` config file from the latest backed up
+6.8. Generate `repos-forked-parent.lst` config file from the latest backed up
      RestAPI JSON file using `repos-forked.lst` config file
 -------------------------------------------------------------------------------
 To be able to generate `repos-forked-parent.lst` config file,
@@ -412,7 +424,7 @@ NOTE:
   with the respective initial configuration file manually.
 
 -------------------------------------------------------------------------------
-5.9. Generate `workflows*.lst` config file from the all latest backed up
+6.9. Generate `workflows*.lst` config file from the all latest backed up
      RestAPI JSON files using `repos-auth-with-workflows.lst` and
      `repos-with-workflows.lst` config files
 -------------------------------------------------------------------------------
@@ -448,18 +460,18 @@ NOTE:
   with the respective initial configuration file manually.
 
 -------------------------------------------------------------------------------
-6. AUTHENTICATION
+7. AUTHENTICATION
 -------------------------------------------------------------------------------
 Authentication is based on `GH_AUTH_USER`, `GH_AUTH_PASS` and `GH_AUTH_PASS_*`
 variables. You must set them to use authentication, otherwise the RestAPI JSON
 response may be truncated, incomplete or invalid.
 
 -------------------------------------------------------------------------------
-7. KNOWN ISSUES
+8. KNOWN ISSUES
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
-7.1. The `backup_restapi_user_repos_list.bat` script does return incomplete
+8.1. The `backup_restapi_user_repos_list.bat` script does return incomplete
      RestAPI JSON response. Not all the public repositories is returned.
 -------------------------------------------------------------------------------
 For some not know reason the `https://api.github.com/users/USER/repos` url
@@ -473,6 +485,6 @@ Use the authenticated user request through the
 and `https://api.github.com/user/repos` url as the RestAPI JSON request.
 
 -------------------------------------------------------------------------------
-8. AUTHOR
+9. AUTHOR
 -------------------------------------------------------------------------------
 Andrey Dibrov (andry at inbox dot ru)

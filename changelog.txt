@@ -1,3 +1,6 @@
+2025.02.06:
+* changed: README_EN.txt: readme update
+
 2025.02.03:
 * changed: *.bat: `CONTOOLS_UTILITIES_BIN_ROOT` variable renamed into `CONTOOLS_UTILS_BIN_ROOT`
 * changed: .externals: switch to `contools--utils` project
