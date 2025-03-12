@@ -61,7 +61,7 @@ if defined FLAG (
     set "FLAG_TEMP_DIR=%~2"
     shift
   ) else if not "%FLAG%" == "--" (
-    echo.%?~nx0%: error: invalid flag: %FLAG%
+    echo.%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 
@@ -72,7 +72,7 @@ if defined FLAG (
 )
 
 if defined FLAG_TEMP_DIR if not exist "%FLAG_TEMP_DIR%\*" (
-  echo.%?~nx0%: error: FLAG_TEMP_DIR directory does not exist: "%FLAG_TEMP_DIR%"
+  echo.%?~%: error: FLAG_TEMP_DIR directory does not exist: "%FLAG_TEMP_DIR%"
   exit /b 255
 ) >&2
 
@@ -80,12 +80,12 @@ set "OWNER=%~1"
 set "REPO=%~2"
 
 if not defined OWNER (
-  echo.%?~nx0%: error: OWNER is not defined.
+  echo.%?~%: error: OWNER is not defined.
   exit /b 255
 ) >&2
 
 if not defined REPO (
-  echo.%?~nx0%: error: REPO is not defined.
+  echo.%?~%: error: REPO is not defined.
   exit /b 255
 ) >&2
 
@@ -131,7 +131,7 @@ if defined GH_AUTH_USER if not "%GH_AUTH_USER%" == "{{USER}}" ^
 if defined GH_AUTH_PASS if not "%GH_AUTH_PASS%" == "{{PASS}}" set HAS_AUTH_USER=1
 
 if %HAS_AUTH_USER% EQU 0 (
-  echo.%~nx0: error: GH_AUTH_USER or GH_AUTH_PASS is not defined.
+  echo.%?~%: error: GH_AUTH_USER or GH_AUTH_PASS is not defined.
   exit /b 255
 ) >&2
 

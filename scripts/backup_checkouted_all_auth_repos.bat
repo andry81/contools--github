@@ -61,7 +61,7 @@ if defined FLAG (
   if "%FLAG%" == "-exit-on-error" (
     set FLAG_EXIT_ON_ERROR=1
   ) else if not "%FLAG%" == "--" (
-    echo.%?~nx0%: error: invalid flag: %FLAG%
+    echo.%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 
@@ -81,7 +81,7 @@ if defined GH_AUTH_USER if not "%GH_AUTH_USER%" == "{{USER}}" ^
 if defined GH_AUTH_PASS if not "%GH_AUTH_PASS%" == "{{PASS}}" set HAS_AUTH_USER=1
 
 if %HAS_AUTH_USER% EQU 0 (
-  echo.%~nx0: error: GH_AUTH_USER or GH_AUTH_PASS is not defined.
+  echo.%?~%: error: GH_AUTH_USER or GH_AUTH_PASS is not defined.
   exit /b 255
 ) >&2
 

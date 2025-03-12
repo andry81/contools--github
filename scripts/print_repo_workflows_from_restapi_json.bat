@@ -60,7 +60,7 @@ if defined FLAG (
   ) else if "%FLAG%" == "-filter-inactive" (
     set FLAG_FILTER_INACTIVE=1
   ) else if not "%FLAG%" == "--" (
-    echo.%?~nx0%: error: invalid flag: %FLAG%
+    echo.%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 
@@ -77,12 +77,12 @@ set "INOUT_LIST_FILE_TMP2=%SCRIPT_TEMP_CURRENT_DIR%\inout2.lst"
 set "JSON_FILE=%~1"
 
 if not defined JSON_FILE (
-  echo.%?~nx0%: error: JSON_FILE is not defined.
+  echo.%?~%: error: JSON_FILE is not defined.
   exit /b 255
 ) >&2
 
 if not exist "%JSON_FILE%" (
-  echo.%?~nx0%: error: JSON_FILE is not found: "%JSON_FILE%".
+  echo.%?~%: error: JSON_FILE is not found: "%JSON_FILE%".
   exit /b 255
 ) >&2
 

@@ -46,7 +46,7 @@ if not "%FLAG:~0,1%" == "-" set "FLAG="
 
 if defined FLAG (
   if not "%FLAG%" == "--" (
-    echo.%?~nx0%: error: invalid flag: %FLAG%
+    echo.%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 
@@ -59,7 +59,7 @@ if defined FLAG (
 set "OWNER=%~1"
 
 if not defined OWNER (
-  echo.%?~nx0%: error: OWNER is not defined.
+  echo.%?~%: error: OWNER is not defined.
   exit /b 255
 ) >&2
 
@@ -96,7 +96,7 @@ if "%QUERY_LEN%" == "null" set QUERY_LEN=0
 
 rem just in case
 if %PAGE% GTR %GH_RESTAPI_REQ_MAX_PAGE% (
-  echo.%?~nx0%: error: too many pages, skip processing.
+  echo.%?~%: error: too many pages, skip processing.
   goto PAGE_LOOP_END
 ) >&2
 
@@ -105,7 +105,7 @@ if %QUERY_LEN% GEQ %GH_RESTAPI_PARAM_PER_PAGE% ( set /A "PAGE+=1" & goto PAGE_LO
 :PAGE_LOOP_END
 
 if %PAGE% LSS 2 if %QUERY_LEN% EQU 0 (
-  echo.%?~nx0%: warning: query response is empty.
+  echo.%?~%: warning: query response is empty.
   exit /b 255
 ) >&2
 

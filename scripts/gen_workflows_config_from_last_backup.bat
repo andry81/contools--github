@@ -63,7 +63,7 @@ if defined FLAG (
     set FLAG_FILTER_INACTIVE=1
     set BARE_FLAGS=%BARE_FLAGS% -filter-inactive
   ) else (
-    echo.%?~nx0%: error: invalid flag: %FLAG%
+    echo.%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 

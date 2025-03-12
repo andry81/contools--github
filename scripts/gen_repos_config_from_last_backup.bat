@@ -62,7 +62,7 @@ if defined FLAG (
   ) else if "%FLAG%" == "-filter-forked-parent" (
     set FLAG_FILTER_FORKED_PARENT=1
   ) else (
-    echo.%?~nx0%: error: invalid flag: %FLAG%
+    echo.%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 

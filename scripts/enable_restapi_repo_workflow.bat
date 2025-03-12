@@ -54,7 +54,7 @@ if not "%FLAG:~0,1%" == "-" set "FLAG="
 
 if defined FLAG (
   if not "%FLAG%" == "--" (
-    echo.%?~nx0%: error: invalid flag: %FLAG%
+    echo.%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 
@@ -69,17 +69,17 @@ set "REPO=%~2"
 set "WORKFLOW_ID=%~3"
 
 if not defined OWNER (
-  echo.%?~nx0%: error: OWNER is not defined.
+  echo.%?~%: error: OWNER is not defined.
   exit /b 255
 ) >&2
 
 if not defined REPO (
-  echo.%?~nx0%: error: REPO is not defined.
+  echo.%?~%: error: REPO is not defined.
   exit /b 255
 ) >&2
 
 if not defined WORKFLOW_ID (
-  echo.%?~nx0%: error: WORKFLOW_ID is not defined.
+  echo.%?~%: error: WORKFLOW_ID is not defined.
   exit /b 255
 ) >&2
 
@@ -119,7 +119,7 @@ if not defined QUERY_LEN set QUERY_LEN=0
 if "%QUERY_LEN%" == "null" set QUERY_LEN=0
 
 if %QUERY_LEN% EQU 0 (
-  echo.%?~nx0%: warning: query response is empty.
+  echo.%?~%: warning: query response is empty.
   exit /b 255
 ) >&2
 

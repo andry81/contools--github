@@ -49,7 +49,7 @@ if not "%FLAG:~0,1%" == "-" set "FLAG="
 
 if defined FLAG (
   if not "%FLAG%" == "--" (
-    echo.%?~nx0%: error: invalid flag: %FLAG%
+    echo.%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 
@@ -62,7 +62,7 @@ if defined FLAG (
 set "TYPE=%~1"
 
 if not defined TYPE (
-  echo.%?~nx0%: error: TYPE is not defined.
+  echo.%?~%: error: TYPE is not defined.
   exit /b 255
 ) >&2
 
@@ -81,7 +81,7 @@ if defined GH_AUTH_USER if not "%GH_AUTH_USER%" == "{{USER}}" ^
 if defined GH_AUTH_PASS if not "%GH_AUTH_PASS%" == "{{PASS}}" set HAS_AUTH_USER=1
 
 if %HAS_AUTH_USER% EQU 0 (
-  echo.%~nx0: error: GH_AUTH_USER or GH_AUTH_PASS is not defined.
+  echo.%?~%: error: GH_AUTH_USER or GH_AUTH_PASS is not defined.
   exit /b 255
 ) >&2
 
@@ -108,7 +108,7 @@ if "%QUERY_LEN%" == "null" set QUERY_LEN=0
 
 rem just in case
 if %PAGE% GTR %GH_RESTAPI_REQ_MAX_PAGE% (
-  echo.%?~nx0%: error: too many pages, skip processing.
+  echo.%?~%: error: too many pages, skip processing.
   goto PAGE_LOOP_END
 ) >&2
 
@@ -117,7 +117,7 @@ if %QUERY_LEN% GEQ %GH_RESTAPI_PARAM_PER_PAGE% ( set /A "PAGE+=1" & goto PAGE_LO
 :PAGE_LOOP_END
 
 if %PAGE% LSS 2 if %QUERY_LEN% EQU 0 (
-  echo.%?~nx0%: warning: query response is empty.
+  echo.%?~%: warning: query response is empty.
   exit /b 255
 ) >&2
 
