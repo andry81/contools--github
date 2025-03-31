@@ -1,3 +1,6 @@
+2025.03.31:
+* fixed: scripts/print_repo_workflows_from_last_backup_by_config.bat: execution fixup
+
 2025.03.12:
 * new: scripts/*.bat: update `?~` variable as script names call stack: `A.bat->...->Z.bat` instead of `Y.bat: Z.bat` or `Z.bat`
 * changed: scripts/*.bat: global code improvement to replace `echo.%?~nx0%` and `echo.%~nx0` calls by `echo.%?~%`

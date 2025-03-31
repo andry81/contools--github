@@ -144,7 +144,7 @@ for /F "usebackq eol=# tokens=1,* delims=/" %%i in (%CONFIG_FILE%) do (
       )
     ) %REDIR_LINE%
 
-    if %FLAG_SKIP_SORT% EQU 0 call :SORT_AND_PRINT & type "%INOUT_LIST_FILE_TMP1%"
+    if %FLAG_SKIP_SORT% EQU 0 call :SORT & type "%INOUT_LIST_FILE_TMP1%"
   )
 
   set PRINT_BLANK_LINE=1
