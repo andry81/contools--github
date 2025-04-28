@@ -1,3 +1,6 @@
+2025.04.28:
+* changed: global code improvement: `echo.` -> `echo;`, based on "Different `echo?...` variants" : https://github.com/andry81/contools/discussions/22
+
 2025.03.31:
 * fixed: scripts/print_repo_workflows_from_last_backup_by_config.bat: execution fixup
 

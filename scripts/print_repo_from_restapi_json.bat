@@ -83,7 +83,7 @@ if defined FLAG (
   ) else if "%FLAG%" == "-comment-private" (
     set FLAG_COMMENT_PRIVATE=1
   ) else if not "%FLAG%" == "--" (
-    echo.%?~%: error: invalid flag: %FLAG%
+    echo;%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 
@@ -100,12 +100,12 @@ set "INOUT_LIST_FILE_TMP2=%SCRIPT_TEMP_CURRENT_DIR%\inout2.lst"
 set "JSON_FILE=%~1"
 
 if not defined JSON_FILE (
-  echo.%?~%: error: JSON_FILE is not defined.
+  echo;%?~%: error: JSON_FILE is not defined.
   exit /b 255
 ) >&2
 
 if not exist "%JSON_FILE%" (
-  echo.%?~%: error: JSON_FILE is not found: "%JSON_FILE%".
+  echo;%?~%: error: JSON_FILE is not found: "%JSON_FILE%".
   exit /b 255
 ) >&2
 
@@ -178,7 +178,7 @@ exit /b 0
 
 :PROCESS_URL
 if "%URL_PATH:~0,19%" == "https://github.com/" set "URL_PATH=%URL_PATH:~19%"
-if defined URL_PATH setlocal ENABLEDELAYEDEXPANSION & for /F "tokens=* delims="eol^= %%i in ("!URL_PATH!") do endlocal & echo.%%i
+if defined URL_PATH setlocal ENABLEDELAYEDEXPANSION & for /F "tokens=* delims="eol^= %%i in ("!URL_PATH!") do endlocal & echo;%%i
 exit /b
 
 :NO_URL_DOMAIN_REMOVE

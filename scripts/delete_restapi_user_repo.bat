@@ -49,7 +49,7 @@ if defined FLAG (
   if "%FLAG%" == "-checkout" (
     set FLAG_CHECKOUT=1
   ) else if not "%FLAG%" == "--" (
-    echo.%?~%: error: invalid flag: %FLAG%
+    echo;%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 
@@ -63,12 +63,12 @@ set "OWNER=%~1"
 set "REPO=%~2"
 
 if not defined OWNER (
-  echo.%?~%: error: OWNER is not defined.
+  echo;%?~%: error: OWNER is not defined.
   exit /b 255
 ) >&2
 
 if not defined REPO (
-  echo.%?~%: error: REPO is not defined.
+  echo;%?~%: error: REPO is not defined.
   exit /b 255
 ) >&2
 
@@ -78,7 +78,7 @@ if defined GH_AUTH_USER if not "%GH_AUTH_USER%" == "{{USER}}" ^
 if defined GH_AUTH_PASS_TO_DELETE if not "%GH_AUTH_PASS_TO_DELETE%" == "{{PASS-TO-DELETE}}" set HAS_AUTH_USER=1
 
 if %HAS_AUTH_USER% EQU 0 (
-  echo.%?~%: error: GH_AUTH_USER or GH_AUTH_PASS_TO_DELETE is not defined.
+  echo;%?~%: error: GH_AUTH_USER or GH_AUTH_PASS_TO_DELETE is not defined.
   exit /b 255
 ) >&2
 
@@ -88,6 +88,6 @@ call set "GH_RESTAPI_DELETE_REPO_URL=%%GH_RESTAPI_DELETE_REPO_URL:{{REPO}}=%REPO
 call "%%CONTOOLS_GITHUB_PROJECT_ROOT%%/tools/curl.bat" "%%GH_AUTH_USER%%" "%%GH_AUTH_PASS_TO_DELETE%%" "%%GH_RESTAPI_DELETE_REPO_URL%%"
 set LAST_ERROR=%ERRORLEVEL%
 
-echo.
+echo;
 
 exit /b %LAST_ERROR%

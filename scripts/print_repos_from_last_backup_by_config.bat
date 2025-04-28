@@ -87,7 +87,7 @@ if defined FLAG (
     set FLAG_COMMENT_PRIVATE=1
     set BARE_FLAGS=%BARE_FLAGS% %FLAG%
   ) else if not "%FLAG%" == "--" (
-    echo.%?~%: error: invalid flag: %FLAG%
+    echo;%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 
@@ -103,7 +103,7 @@ set "INOUT_LIST_FILE_TMP1=%SCRIPT_TEMP_CURRENT_DIR%\inout1.lst"
 set "CONFIG_FILE=%~1"
 
 if not defined CONFIG_FILE (
-  echo.%?~%: error: CONFIG_FILE is not defined.
+  echo;%?~%: error: CONFIG_FILE is not defined.
   exit /b 255
 ) >&2
 
@@ -112,7 +112,7 @@ set "CONFIG_FILE=%CONFIG_FILE:\=/%"
 if "%CONFIG_FILE:/=%" == "%CONFIG_FILE%" set "CONFIG_FILE=%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/%CONFIG_FILE%"
 
 if not exist "%CONFIG_FILE%" (
-  echo.%?~%: error: CONFIG_FILE is not found: "%CONFIG_FILE%".
+  echo;%?~%: error: CONFIG_FILE is not found: "%CONFIG_FILE%".
   exit /b 255
 ) >&2
 
@@ -150,9 +150,9 @@ for /F "usebackq eol=# tokens=* delims=" %%i in (%CONFIG_FILE%) do (
 
   call :EXEC_AND_RETURN_FIRST_LINE
 
-  if defined PRINT_BLANK_LINE echo.
+  if defined PRINT_BLANK_LINE echo;
 
-  call echo.### %%OWNER%%
+  call echo;### %%OWNER%%
 
   if defined GH_BACKUP_RESTAPI_AUTH_USER_REPOS_FILE (
     call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/extract_files_from_archives.bat" -i -p "%%GH_BACKUP_RESTAPI_AUTH_USER_REPOS_FILE%%" * "%%GH_BACKUP_EXTRACT_TEMP_DIR%%" >nul

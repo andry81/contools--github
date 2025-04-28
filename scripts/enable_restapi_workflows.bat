@@ -64,7 +64,7 @@ if defined FLAG (
   ) else if "%FLAG%" == "-use-inactive" (
     set FLAG_USE_INACTIVE=1
   ) else if not "%FLAG%" == "--" (
-    echo.%?~%: error: invalid flag: %FLAG%
+    echo;%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 
@@ -80,7 +80,7 @@ set "FROM_CMD_PARAM1=%~3"
 
 rem must be empty
 if defined FROM_CMD (
-  if not defined SKIPPING_CMD echo.Skipping commands:
+  if not defined SKIPPING_CMD echo;Skipping commands:
   set SKIPPING_CMD=1
 )
 
@@ -97,8 +97,8 @@ for /F "usebackq eol=# tokens=1,* delims=:" %%i in (%WORKFLOW_LISTS%) do for /F 
 
   if not defined SKIPPING_CMD (
     call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%enable_restapi_repo_workflow.bat" "%%REPO_OWNER%%" "%%REPO%%" "%%WORKFLOW_ID%%" || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
-    echo.---
-  ) else call echo.* enable_restapi_repo_workflow.bat "%%REPO_OWNER%%" "%%REPO%%" "%%WORKFLOW_ID%%"
+    echo;---
+  ) else call echo;* enable_restapi_repo_workflow.bat "%%REPO_OWNER%%" "%%REPO%%" "%%WORKFLOW_ID%%"
 )
 
 exit /b 0

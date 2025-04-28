@@ -49,7 +49,7 @@ if %NEST_LVL% EQU 1 (
 
 rem call "%%CONTOOLS_ROOT%%/std/setshift.bat" 2 CMDLINE %%*
 rem call "%%CONTOOLS_ROOT%%/std/echo_var.bat" CMDLINE ">"
-rem echo.
+rem echo;
 
 rem The caller can continue after this exit.
 exit /b 0

@@ -14,8 +14,8 @@ call :MAIN %%*
 set LAST_ERROR=%ERRORLEVEL%
 
 if defined HAD_SKIPPING_CMD if not defined SKIPPING_CMD (
-  echo.---
-  echo.
+  echo;---
+  echo;
 )
 
 (

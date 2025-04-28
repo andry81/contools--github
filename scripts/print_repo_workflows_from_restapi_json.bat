@@ -60,7 +60,7 @@ if defined FLAG (
   ) else if "%FLAG%" == "-filter-inactive" (
     set FLAG_FILTER_INACTIVE=1
   ) else if not "%FLAG%" == "--" (
-    echo.%?~%: error: invalid flag: %FLAG%
+    echo;%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 
@@ -77,12 +77,12 @@ set "INOUT_LIST_FILE_TMP2=%SCRIPT_TEMP_CURRENT_DIR%\inout2.lst"
 set "JSON_FILE=%~1"
 
 if not defined JSON_FILE (
-  echo.%?~%: error: JSON_FILE is not defined.
+  echo;%?~%: error: JSON_FILE is not defined.
   exit /b 255
 ) >&2
 
 if not exist "%JSON_FILE%" (
-  echo.%?~%: error: JSON_FILE is not found: "%JSON_FILE%".
+  echo;%?~%: error: JSON_FILE is not found: "%JSON_FILE%".
   exit /b 255
 ) >&2
 
@@ -145,7 +145,7 @@ exit /b -1
 setlocal ENABLEDELAYEDEXPANSION
 if "!FILE_PATH:~0,18!" == ".github/workflows/" set "FILE_PATH=!FILE_PATH:~18!"
 if defined FILE_PATH (
-  for /F "tokens=* delims="eol^= %%i in ("!FILE_PATH_PREFIX!!FILE_PATH!") do endlocal & echo.%%i
+  for /F "tokens=* delims="eol^= %%i in ("!FILE_PATH_PREFIX!!FILE_PATH!") do endlocal & echo;%%i
   exit /b 0
 ) else endlocal
 exit /b -1

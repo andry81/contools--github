@@ -58,7 +58,7 @@ if defined FLAG (
     set "FLAG_TEMP_DIR=%~2"
     shift
   ) else if not "%FLAG%" == "--" (
-    echo.%?~%: error: invalid flag: %FLAG%
+    echo;%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 
@@ -69,7 +69,7 @@ if defined FLAG (
 )
 
 if defined FLAG_TEMP_DIR if not exist "%FLAG_TEMP_DIR%\*" (
-  echo.%?~%: error: FLAG_TEMP_DIR directory does not exist: "%FLAG_TEMP_DIR%"
+  echo;%?~%: error: FLAG_TEMP_DIR directory does not exist: "%FLAG_TEMP_DIR%"
   exit /b 255
 ) >&2
 
@@ -77,12 +77,12 @@ set "OWNER=%~1"
 set "REPO=%~2"
 
 if not defined OWNER (
-  echo.%?~%: error: OWNER is not defined.
+  echo;%?~%: error: OWNER is not defined.
   exit /b 255
 ) >&2
 
 if not defined REPO (
-  echo.%?~%: error: REPO is not defined.
+  echo;%?~%: error: REPO is not defined.
   exit /b 255
 ) >&2
 
@@ -125,7 +125,7 @@ call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir.bat" "%%GH_BACKUP_OUTPUT_TEMP_DIR%%" >
 call :GIT clone --config core.longpaths=true -v --recurse-submodules --progress "https://github.com/%%OWNER%%/%%REPO%%" "%%GH_BACKUP_OUTPUT_TEMP_DIR%%"
 set LAST_ERROR=%ERRORLEVEL%
 
-echo.
+echo;
 
 if exist "%GH_BACKUP_OUTPUT_TEMP_DIR%/db/config" goto ARCHIVE
 if exist "%GH_BACKUP_OUTPUT_TEMP_DIR%/wc/.git/config" goto ARCHIVE
@@ -136,12 +136,12 @@ call set "GH_BACKUP_CHECKOUTED_REPO_FILE=%%GH_BACKUP_CHECKOUTED_REPO_FILE_NAME:{
 call set "GH_BACKUP_CHECKOUTED_REPO_FILE=%%GH_BACKUP_CHECKOUTED_REPO_FILE:{{REPO}}=%REPO%%%"
 call set "GH_BACKUP_CHECKOUTED_REPO_FILE=%%GH_BACKUP_CHECKOUTED_REPO_FILE:{{DATE_TIME}}=%PROJECT_LOG_FILE_NAME_DATE_TIME%%%"
 
-echo.Archiving backup directory...
+echo;Archiving backup directory...
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_BACKUP_OUTPUT_DIR%%" && ^
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_BACKUP_TEMP_DIR%%" "*" "%%GH_BACKUP_OUTPUT_DIR%%/%%GH_BACKUP_CHECKOUTED_REPO_FILE%%.7z" -sdel%%_7ZIP_BARE_FLAGS%%
 set LAST_ERROR=%ERRORLEVEL%
 
-echo.
+echo;
 
 rem avoid command line temporary directory remove on archive error
 if %LAST_ERROR% NEQ 0 goto SKIP_TEMP_DIR_REMOVE
@@ -154,6 +154,6 @@ if defined TEMP_DIR rmdir /S /Q "%TEMP_DIR%" >nul 2>nul
 exit /b %LAST_ERROR%
 
 :GIT
-echo.^>git.exe %GIT_BARE_FLAGS% %*
+echo;^>git.exe %GIT_BARE_FLAGS% %*
 git.exe %GIT_BARE_FLAGS% %*
 exit /b

@@ -65,7 +65,7 @@ if defined FLAG (
   ) else if "%FLAG%" == "-exit-on-error" (
     set FLAG_EXIT_ON_ERROR=1
   ) else if not "%FLAG%" == "--" (
-    echo.%?~%: error: invalid flag: %FLAG%
+    echo;%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 
@@ -88,7 +88,7 @@ if defined GH_AUTH_PASS if not "%GH_AUTH_PASS%" == "{{PASS}}" set HAS_AUTH_USER=
 
 rem must be empty
 if defined FROM_CMD (
-  if not defined SKIPPING_CMD echo.Skipping commands:
+  if not defined SKIPPING_CMD echo;Skipping commands:
   set SKIPPING_CMD=1
 )
 
@@ -104,8 +104,8 @@ for /F "usebackq eol=# tokens=1,* delims=/" %%i in ("%CONTOOLS_GITHUB_PROJECT_OU
 
   if not defined SKIPPING_CMD (
     call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_repo_workflows_list.bat"%%BARE_FLAGS%% "%%REPO_OWNER%%" "%%REPO%%" || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
-    echo.---
-  ) else call echo.* backup_restapi_repo_workflows_list.bat "%%REPO_OWNER%%" "%%REPO%%"
+    echo;---
+  ) else call echo;* backup_restapi_repo_workflows_list.bat "%%REPO_OWNER%%" "%%REPO%%"
 )
 
 :SKIP_AUTH_USER
@@ -121,8 +121,8 @@ for /F "usebackq eol=# tokens=1,* delims=/" %%i in ("%CONTOOLS_GITHUB_PROJECT_OU
 
   if not defined SKIPPING_CMD (
     call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_repo_workflows_list.bat"%%BARE_FLAGS%% "%%REPO_OWNER%%" "%%REPO%%" || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
-    echo.---
-  ) else call echo.* backup_restapi_repo_workflows_list.bat "%%REPO_OWNER%%" "%%REPO%%"
+    echo;---
+  ) else call echo;* backup_restapi_repo_workflows_list.bat "%%REPO_OWNER%%" "%%REPO%%"
 )
 
 exit /b 0

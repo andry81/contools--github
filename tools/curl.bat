@@ -29,7 +29,7 @@ set /A SKIP_COUNT=%ERRORLEVEL%
 call "%%CONTOOLS_ROOT%%/std/setshift.bat" -skip %%SKIP_COUNT%% 2 CURL_CMDLINE %%CURL_CMDLINE_PREFIX%% %%*
 
 setlocal ENABLEDELAYEDEXPANSION & for /F "tokens=* delims="eol^= %%i in ("!CURL_CMDLINE!") do endlocal & (
-  echo.^>%%i
+  echo;^>%%i
   (
     %%i
   ) > "%CURL_OUTPUT_FILE%"

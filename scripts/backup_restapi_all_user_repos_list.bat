@@ -65,7 +65,7 @@ if defined FLAG (
   ) else if "%FLAG%" == "-exit-on-error" (
     set FLAG_EXIT_ON_ERROR=1
   ) else if not "%FLAG%" == "--" (
-    echo.%?~%: error: invalid flag: %FLAG%
+    echo;%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 
@@ -88,7 +88,7 @@ if defined GH_AUTH_PASS if not "%GH_AUTH_PASS%" == "{{PASS}}" set HAS_AUTH_USER=
 
 rem must be empty
 if defined FROM_CMD (
-  if not defined SKIPPING_CMD echo.Skipping commands:
+  if not defined SKIPPING_CMD echo;Skipping commands:
   set SKIPPING_CMD=1
 )
 
@@ -100,15 +100,15 @@ call "%%?~dp0%%.impl/update_skip_state.bat" "backup_restapi_auth_user_repos_list
 
 if not defined SKIPPING_CMD (
   call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_auth_user_repos_list.bat" owner || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
-  echo.---
-) else call echo.* backup_restapi_auth_user_repos_list.bat owner
+  echo;---
+) else call echo;* backup_restapi_auth_user_repos_list.bat owner
 
 call "%%?~dp0%%.impl/update_skip_state.bat" "backup_restapi_auth_user_repos_list.bat" all
 
 if not defined SKIPPING_CMD (
   call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_auth_user_repos_list.bat" all || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
-  echo.---
-) else call echo.* backup_restapi_auth_user_repos_list.bat all
+  echo;---
+) else call echo;* backup_restapi_auth_user_repos_list.bat all
 
 :SKIP_AUTH_USER
 :SKIP_AUTH_REPO_LIST
@@ -122,22 +122,22 @@ for /F "usebackq eol=# tokens=* delims=" %%i in ("%CONTOOLS_GITHUB_PROJECT_OUTPU
 
   if not defined SKIPPING_CMD (
     call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_user_repos_list.bat" "%%REPO_OWNER%%" owner || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
-    echo.---
-  ) else call echo.* backup_restapi_user_repos_list.bat "%%REPO_OWNER%%" owner
+    echo;---
+  ) else call echo;* backup_restapi_user_repos_list.bat "%%REPO_OWNER%%" owner
 
   call "%%?~dp0%%.impl/update_skip_state.bat" "backup_restapi_user_repos_list.bat" "%%REPO_OWNER%%" all
 
   if not defined SKIPPING_CMD (
     call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_user_repos_list.bat" "%%REPO_OWNER%%" all || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
-    echo.---
-  ) else call echo.* backup_restapi_user_repos_list.bat "%%REPO_OWNER%%" all
+    echo;---
+  ) else call echo;* backup_restapi_user_repos_list.bat "%%REPO_OWNER%%" all
 
   call "%%?~dp0%%.impl/update_skip_state.bat" "backup_restapi_starred_repos_list.bat" "%%REPO_OWNER%%"
 
   if not defined SKIPPING_CMD (
     call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/call.bat" "%%?~dp0%%backup_restapi_starred_repos_list.bat" "%%REPO_OWNER%%" || if %FLAG_EXIT_ON_ERROR% NEQ 0 exit /b 255
-    echo.---
-  ) else call echo.* backup_restapi_starred_repos_list.bat "%%REPO_OWNER%%"
+    echo;---
+  ) else call echo;* backup_restapi_starred_repos_list.bat "%%REPO_OWNER%%"
 )
 
 exit /b 0

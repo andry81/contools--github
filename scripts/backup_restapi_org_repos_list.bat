@@ -51,7 +51,7 @@ if not "%FLAG:~0,1%" == "-" set "FLAG="
 
 if defined FLAG (
   if not "%FLAG%" == "--" (
-    echo.%?~%: error: invalid flag: %FLAG%
+    echo;%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 
@@ -65,12 +65,12 @@ set "ORG=%~1"
 set "TYPE=%~2"
 
 if not defined ORG (
-  echo.%?~%: error: ORG is not defined.
+  echo;%?~%: error: ORG is not defined.
   exit /b 255
 ) >&2
 
 if not defined TYPE (
-  echo.%?~%: error: TYPE is not defined.
+  echo;%?~%: error: TYPE is not defined.
   exit /b 255
 ) >&2
 
@@ -96,7 +96,7 @@ call set "CURL_OUTPUT_FILE=%%CURL_OUTPUT_FILE:{{TYPE}}=%TYPE%%%"
 call set "CURL_OUTPUT_FILE=%%CURL_OUTPUT_FILE:{{PAGE}}=%PAGE%%%"
 
 call "%%CONTOOLS_GITHUB_PROJECT_ROOT%%/tools/curl.bat" "%%GH_AUTH_USER%%" "%%GH_AUTH_PASS%%" "%%GH_RESTAPI_ORG_REPOS_URL_PATH%%" || goto MAIN_EXIT
-echo.
+echo;
 
 "%JQ_EXECUTABLE%" "length" "%CURL_OUTPUT_FILE%" 2>nul > "%QUERY_TEMP_FILE%"
 
@@ -108,7 +108,7 @@ if "%QUERY_LEN%" == "null" set QUERY_LEN=0
 
 rem just in case
 if %PAGE% GTR %GH_RESTAPI_REQ_MAX_PAGE% (
-  echo.%?~%: error: too many pages, skip processing.
+  echo;%?~%: error: too many pages, skip processing.
   goto PAGE_LOOP_END
 ) >&2
 
@@ -117,7 +117,7 @@ if %QUERY_LEN% GEQ %GH_RESTAPI_PARAM_PER_PAGE% ( set /A "PAGE+=1" & goto PAGE_LO
 :PAGE_LOOP_END
 
 if %PAGE% LSS 2 if %QUERY_LEN% EQU 0 (
-  echo.%?~%: warning: query response is empty.
+  echo;%?~%: warning: query response is empty.
   exit /b 255
 ) >&2
 
@@ -125,16 +125,16 @@ call set "GH_BACKUP_RESTAPI_ORG_REPOS_FILE=%%GH_BACKUP_RESTAPI_ORG_REPOS_FILE_NA
 call set "GH_BACKUP_RESTAPI_ORG_REPOS_FILE=%%GH_BACKUP_RESTAPI_ORG_REPOS_FILE:{{TYPE}}=%TYPE%%%"
 call set "GH_BACKUP_RESTAPI_ORG_REPOS_FILE=%%GH_BACKUP_RESTAPI_ORG_REPOS_FILE:{{DATE_TIME}}=%PROJECT_LOG_FILE_NAME_DATE_TIME%%%"
 
-echo.Archiving backup directory...
+echo;Archiving backup directory...
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_BACKUP_OUTPUT_DIR%%" && ^
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_BACKUP_TEMP_DIR%%" "*" "%%GH_BACKUP_OUTPUT_DIR%%/%%GH_BACKUP_RESTAPI_ORG_REPOS_FILE%%.7z" -sdel%%_7ZIP_BARE_FLAGS%% || exit /b 20
-echo.
+echo;
 
 exit /b 0
 
 :MAIN_EXIT
 set LAST_ERROR=%ERRORLEVEL%
 
-echo.
+echo;
 
 exit /b %LAST_ERROR%

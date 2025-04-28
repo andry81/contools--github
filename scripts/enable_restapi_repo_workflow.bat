@@ -54,7 +54,7 @@ if not "%FLAG:~0,1%" == "-" set "FLAG="
 
 if defined FLAG (
   if not "%FLAG%" == "--" (
-    echo.%?~%: error: invalid flag: %FLAG%
+    echo;%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
 
@@ -69,17 +69,17 @@ set "REPO=%~2"
 set "WORKFLOW_ID=%~3"
 
 if not defined OWNER (
-  echo.%?~%: error: OWNER is not defined.
+  echo;%?~%: error: OWNER is not defined.
   exit /b 255
 ) >&2
 
 if not defined REPO (
-  echo.%?~%: error: REPO is not defined.
+  echo;%?~%: error: REPO is not defined.
   exit /b 255
 ) >&2
 
 if not defined WORKFLOW_ID (
-  echo.%?~%: error: WORKFLOW_ID is not defined.
+  echo;%?~%: error: WORKFLOW_ID is not defined.
   exit /b 255
 ) >&2
 
@@ -108,7 +108,7 @@ set "CURL_OUTPUT_FILE=%GH_WORKFLOW_OUTPUT_TEMP_DIR%/%GH_RESTAPI_USER_REPO_ENABLE
 call set "CURL_OUTPUT_FILE=%%CURL_OUTPUT_FILE:{{PAGE}}=%PAGE%%%"
 
 call "%%CONTOOLS_GITHUB_PROJECT_ROOT%%/tools/curl.bat" "%%GH_AUTH_USER%%" "%%GH_AUTH_WORKFLOW_WRITE_PASS%%" "%%GH_RESTAPI_USER_REPO_ENABLE_WORKFLOW_URL_PATH%%" || goto MAIN_EXIT
-echo.
+echo;
 
 "%JQ_EXECUTABLE%" "length" "%CURL_OUTPUT_FILE%" 2>nul > "%QUERY_TEMP_FILE%"
 
@@ -119,7 +119,7 @@ if not defined QUERY_LEN set QUERY_LEN=0
 if "%QUERY_LEN%" == "null" set QUERY_LEN=0
 
 if %QUERY_LEN% EQU 0 (
-  echo.%?~%: warning: query response is empty.
+  echo;%?~%: warning: query response is empty.
   exit /b 255
 ) >&2
 
@@ -128,16 +128,16 @@ call set "GH_ENABLE_RESTAPI_REPO_WORKFLOW_FILE=%%GH_ENABLE_RESTAPI_REPO_WORKFLOW
 call set "GH_ENABLE_RESTAPI_REPO_WORKFLOW_FILE=%%GH_ENABLE_RESTAPI_REPO_WORKFLOW_FILE:{{WORKFLOW_ID}}=%WORKFLOW_ID%%%"
 call set "GH_ENABLE_RESTAPI_REPO_WORKFLOW_FILE=%%GH_ENABLE_RESTAPI_REPO_WORKFLOW_FILE:{{DATE_TIME}}=%PROJECT_LOG_FILE_NAME_DATE_TIME%%%"
 
-echo.Archiving backup directory...
+echo;Archiving backup directory...
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_WORKFLOW_OUTPUT_DIR%%" && ^
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_WORKFLOW_TEMP_DIR%%" "*" "%%GH_WORKFLOW_OUTPUT_DIR%%/%%GH_ENABLE_RESTAPI_REPO_WORKFLOW_FILE%%.7z" -sdel%%_7ZIP_BARE_FLAGS%% || exit /b 20
-echo.
+echo;
 
 exit /b 0
 
 :MAIN_EXIT
 set LAST_ERROR=%ERRORLEVEL%
 
-echo.
+echo;
 
 exit /b %LAST_ERROR%
