@@ -58,18 +58,8 @@ if %NO_GEN%0 EQU 0 (
   call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/gen_config_dir.bat" -if_notexist "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" *.lst || exit /b
 ) else call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/load_config_dir.bat" %%* -- "%%CONTOOLS_GITHUB_PROJECT_INPUT_CONFIG_ROOT%%" "%%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%%" || exit /b
 
-call "%%CONTOOLS_ROOT%%/std/if_var_defined_and_file_exist.bat" CURL_EXECUTABLE || (
-  echo;%~nx0: error: CURL_EXECUTABLE file path is not found: "%CURL_EXECUTABLE%"
-  exit /b 255
-) >&2
-
-call "%%CONTOOLS_ROOT%%/std/if_var_defined_and_file_exist.bat" JQ_EXECUTABLE || (
-  echo;%~nx0: error: JQ_EXECUTABLE file path is not found: "%JQ_EXECUTABLE%"
-  exit /b 255
-) >&2
-
-call "%%CONTOOLS_ROOT%%/std/canonical_path.bat" GH_BACKUP_DIR   "%%GH_BACKUP_DIR%%"
-call "%%CONTOOLS_ROOT%%/std/canonical_path.bat" GH_WORKFLOW_DIR "%%GH_WORKFLOW_DIR%%"
+call "%%CONTOOLS_ROOT%%/std/canonical_file_vars.bat" CURL_EXECUTABLE JQ_EXECUTABLE || exit /b
+call "%%CONTOOLS_ROOT%%/std/canonical_dir_vars.bat" GH_BACKUP_DIR GH_WORKFLOW_DIR || exit /b
 
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_BACKUP_DIR%%" || exit /b
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_WORKFLOW_DIR%%" || exit /b

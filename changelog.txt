@@ -1,3 +1,6 @@
+2025.06.03:
+* changed: global code improvement: replace `if_var_defined_and_*_exist.bat` and `canonical_path.bat` script calls by `canonical_*_vars.bat` call
+
 2025.04.28:
 * changed: global code improvement: `echo.` -> `echo;`, based on "Different `echo?...` variants" : https://github.com/andry81/contools/discussions/22
 
