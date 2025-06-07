@@ -163,11 +163,11 @@ exit /b -1
 exit /b 0
 
 :ENCODE_URL
-setlocal ENABLEDELAYEDEXPANSION & (echo;!URL_PATH:/=/!)
+setlocal ENABLEDELAYEDEXPANSION & echo;!URL_PATH:/=/!
 exit /b 0
 
 :DECODE_URL
-setlocal ENABLEDELAYEDEXPANSION & (echo;!URL_PATH:/=/!)
+setlocal ENABLEDELAYEDEXPANSION & echo;!URL_PATH:/=/!
 exit /b 0
 
 :EXEC_AND_RETURN_FIRST_LINE

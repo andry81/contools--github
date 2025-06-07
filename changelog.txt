@@ -1,3 +1,6 @@
+2025.06.07:
+* changed: scripts/*.bat: code cleanup
+
 2025.06.03:
 * changed: global code improvement: replace `if_var_defined_and_*_exist.bat` and `canonical_path.bat` script calls by `canonical_*_vars.bat` call
 
