@@ -1,17 +1,17 @@
-@echo off
+@echo off & goto DOC_END
 
 rem USAGE:
-rem   backup_restapi_starred_repos_list.bat [<Flags>] [--] <OWNER>
+rem   backup_restapi_starred_repos_list.bat [--] <OWNER>
 
 rem Description:
 rem   Script to request restapi response of starred repository list for a user.
 
-rem <Flags>:
-rem   --
-rem     Stop flags parse.
+rem --:
+rem   Stop flags parse.
 
 rem <OWNER>:
 rem   Owner name of a repository.
+:DOC_END
 
 setlocal
 

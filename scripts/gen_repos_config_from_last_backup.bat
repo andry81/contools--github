@@ -80,21 +80,21 @@ if %FLAG_FILTER_FORKED% EQU 0 (
       for /F "tokens=* delims="eol^= %%i in ("# list of repositories in format: <owner>/<repo>") do echo;%%i
       echo;
 
-      call "%%?~dp0%%print_repos_from_last_backup_by_config.bat"%%BARE_FLAGS%% -print-full-name -filter-source -- "accounts-user.lst"
+      call "%%?~dp0%%print_repos_from_last_backup_by_config.bat" -+%%BARE_FLAGS%% -print-full-name -filter-source -- "accounts-user.lst"
     ) > "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/gen/repos.lst"
 
     (
       for /F "tokens=* delims="eol^= %%i in ("# list of required authentication repositories in format: <owner>/<repo>") do echo;%%i
       echo;
 
-      call "%%?~dp0%%print_repos_from_last_backup_by_config.bat"%%BARE_FLAGS%% -print-full-name -filter-source -filter-auth -- "accounts-user.lst"
+      call "%%?~dp0%%print_repos_from_last_backup_by_config.bat" -+%%BARE_FLAGS%% -print-full-name -filter-source -filter-auth -- "accounts-user.lst"
     ) > "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/gen/repos-auth.lst"
   ) else (
     (
       for /F "tokens=* delims="eol^= %%i in ("# list of forked as parent repositories in format: <owner>/<repo>") do echo;%%i
       echo;
 
-      call "%%?~dp0%%print_repos_forked_parent_from_last_backup_by_config.bat"%%BARE_FLAGS%% -print-full-name -- "repos-forked.lst"
+      call "%%?~dp0%%print_repos_forked_parent_from_last_backup_by_config.bat" -+%%BARE_FLAGS%% -print-full-name -- "repos-forked.lst"
     ) > "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/gen/repos-forked-parent.lst"
   )
 ) else (
@@ -102,6 +102,6 @@ if %FLAG_FILTER_FORKED% EQU 0 (
     for /F "tokens=* delims="eol^= %%i in ("# list of forked as child repositories in format: <owner>/<repo>") do echo;%%i
     echo;
 
-    call "%%?~dp0%%print_repos_from_last_backup_by_config.bat"%%BARE_FLAGS%% -print-full-name -filter-forked -- "accounts-user.lst"
+    call "%%?~dp0%%print_repos_from_last_backup_by_config.bat" -+%%BARE_FLAGS%% -print-full-name -filter-forked -- "accounts-user.lst"
   ) > "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/gen/repos-forked.lst"
 )

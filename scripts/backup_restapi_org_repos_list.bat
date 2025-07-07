@@ -1,15 +1,14 @@
-@echo off
+@echo off & goto DOC_END
 
 rem USAGE:
-rem   backup_restapi_org_repos_list.bat [<Flags>] [--] <ORG> <TYPE>
+rem   backup_restapi_org_repos_list.bat [--] <ORG> <TYPE>
 
 rem Description:
 rem   Script to request restapi response of repository list from a user
 rem   organization account.
 
-rem <Flags>:
-rem   --
-rem     Stop flags parse.
+rem --:
+rem   Stop flags parse.
 
 rem <ORG>:
 rem   User organization name.
@@ -17,6 +16,7 @@ rem <TYPE>:
 rem   Type of user repository request:
 rem   - sources
 rem   - all
+:DOC_END
 
 setlocal
 

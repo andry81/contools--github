@@ -1,25 +1,31 @@
-@echo off
+@echo off & goto DOC_END
 
 rem USAGE:
-rem   backup_bare_auth_repo.bat [<Flags>] [--] <OWNER> <REPO>
+rem   backup_bare_auth_repo.bat [-+] [<flags>] [--] <OWNER> <REPO>
 
 rem Description:
 rem   Script to backup a repository with credentials.
 rem   Backup by default includes only a bare repository backup.
 
-rem <Flags>:
-rem   --
-rem     Stop flags parse.
+rem <flags>:
 rem   -checkout
 rem     Additionally execute git checkout with recursion to backup submodules.
 rem   -temp-dir <temp-dir>
 rem     Retarget all temporary directories into <temp-dir>.
 rem     Useful in case of clone and/or archive large repositories.
 
+rem -+:
+rem   Separator to begin flags scope to parse.
+rem --:
+rem   Separator to end flags scope to parse.
+rem   Required if `-+` is used.
+rem   If `-+` is used, then must be used the same quantity of times.
+
 rem <OWNER>:
 rem   Owner name of a repository.
 rem <REPO>:
 rem   Repository name.
+:DOC_END
 
 setlocal
 
@@ -43,6 +49,7 @@ exit /b %LAST_ERROR%
 
 :MAIN
 rem script flags
+set FLAG_FLAGS_SCOPE=0
 set FLAG_CHECKOUT=0
 set "FLAG_TEMP_DIR="
 
@@ -54,13 +61,16 @@ set "FLAG=%~1"
 if defined FLAG ^
 if not "%FLAG:~0,1%" == "-" set "FLAG="
 
+if defined FLAG if "%FLAG%" == "-+" set /A FLAG_FLAGS_SCOPE+=1
+if defined FLAG if "%FLAG%" == "--" set /A FLAG_FLAGS_SCOPE-=1
+
 if defined FLAG (
   if "%FLAG%" == "-checkout" (
     set FLAG_CHECKOUT=1
   ) else if "%FLAG%" == "-temp-dir" (
     set "FLAG_TEMP_DIR=%~2"
     shift
-  ) else if not "%FLAG%" == "--" (
+  ) else if not "%FLAG%" == "-+" if not "%FLAG%" == "--" (
     echo;%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
@@ -69,7 +79,14 @@ if defined FLAG (
 
   rem read until no flags
   if not "%FLAG%" == "--" goto FLAGS_LOOP
+
+  if %FLAG_FLAGS_SCOPE% GTR 0 goto FLAGS_LOOP
 )
+
+if %FLAG_FLAGS_SCOPE% GTR 0 (
+  echo;%?~%: error: not ended flags scope: [%FLAG_FLAGS_SCOPE%]: %FLAG%
+  exit /b -255
+) >&2
 
 if defined FLAG_TEMP_DIR if not exist "%FLAG_TEMP_DIR%\*" (
   echo;%?~%: error: FLAG_TEMP_DIR directory does not exist: "%FLAG_TEMP_DIR%"

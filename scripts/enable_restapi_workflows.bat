@@ -1,22 +1,28 @@
-@echo off
+@echo off & goto DOC_END
 
 rem USAGE:
-rem   enable_restapi_workflows.bat [<Flags>] [--] [<cmd> [<param0> [<param1>]]]
+rem   enable_restapi_workflows.bat [-+] [<flags>] [--] [<cmd> [<param0> [<param1>]]]
 
 rem Description:
 rem   Script to enable workflows using restapi request.
 
-rem <Flags>:
-rem   --
-rem     Stop flags parse.
+rem <flags>:
 rem   -exit-on-error
 rem     Don't continue on error.
 rem   -use-inactive
 rem     Use `workflows-inactive.lst` config file instead of `workflows.lst`.
 
+rem -+:
+rem   Separator to begin flags scope to parse.
+rem --:
+rem   Separator to end flags scope to parse.
+rem   Required if `-+` is used.
+rem   If `-+` is used, then must be used the same quantity of times.
+
 rem <cmd> [<param0> [<param1>]]
 rem   Continue from specific command with parameters.
 rem   Useful to continue after the last error after specific command.
+:DOC_END
 
 setlocal
 
@@ -47,6 +53,7 @@ exit /b
 
 :MAIN_IMPL
 rem script flags
+set FLAG_FLAGS_SCOPE=0
 set FLAG_EXIT_ON_ERROR=0
 set FLAG_USE_INACTIVE=0
 
@@ -58,12 +65,15 @@ set "FLAG=%~1"
 if defined FLAG ^
 if not "%FLAG:~0,1%" == "-" set "FLAG="
 
+if defined FLAG if "%FLAG%" == "-+" set /A FLAG_FLAGS_SCOPE+=1
+if defined FLAG if "%FLAG%" == "--" set /A FLAG_FLAGS_SCOPE-=1
+
 if defined FLAG (
   if "%FLAG%" == "-exit-on-error" (
     set FLAG_EXIT_ON_ERROR=1
   ) else if "%FLAG%" == "-use-inactive" (
     set FLAG_USE_INACTIVE=1
-  ) else if not "%FLAG%" == "--" (
+  ) else if not "%FLAG%" == "-+" if not "%FLAG%" == "--" (
     echo;%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
@@ -72,7 +82,14 @@ if defined FLAG (
 
   rem read until no flags
   if not "%FLAG%" == "--" goto FLAGS_LOOP
+
+  if %FLAG_FLAGS_SCOPE% GTR 0 goto FLAGS_LOOP
 )
+
+if %FLAG_FLAGS_SCOPE% GTR 0 (
+  echo;%?~%: error: not ended flags scope: [%FLAG_FLAGS_SCOPE%]: %FLAG%
+  exit /b -255
+) >&2
 
 set "FROM_CMD=%~1"
 set "FROM_CMD_PARAM0=%~2"

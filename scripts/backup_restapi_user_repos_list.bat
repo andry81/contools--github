@@ -1,15 +1,14 @@
-@echo off
+@echo off & goto DOC_END
 
 rem USAGE:
-rem   backup_restapi_user_repos_list.bat [<Flags>] [--] <OWNER> <TYPE>
+rem   backup_restapi_user_repos_list.bat [--] <OWNER> <TYPE>
 
 rem Description:
 rem   Script to request restapi response of repository list from a user
 rem   account.
 
-rem <Flags>:
-rem   --
-rem     Stop flags parse.
+rem --:
+rem   Stop flags parse.
 
 rem <OWNER>:
 rem   Owner name of a repository.
@@ -17,6 +16,7 @@ rem <TYPE>:
 rem   Type of user repository request:
 rem   - owner
 rem   - all
+:DOC_END
 
 setlocal
 

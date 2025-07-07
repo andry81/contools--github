@@ -1,14 +1,12 @@
-@echo off
+@echo off & goto DOC_END
 
 rem USAGE:
-rem   print_repo_workflows_from_restapi_json.bat [<Flags>] [--] <JSON_FILE>
+rem   print_repo_workflows_from_restapi_json.bat [-+] [<flags>] [--] <JSON_FILE>
 
 rem Description:
 rem   Script prints repository workflows from the json file.
 
-rem <Flags>:
-rem   --
-rem     Stop flags parse.
+rem <flags>:
 rem   -skip-sort
 rem     Skip repository workflows list alphabetic sort and print as is from the
 rem     json file.
@@ -18,6 +16,14 @@ rem   -print-owner-repo-prefix
 rem     Print `<owner>/<repo>:` prefix for each workflow.
 rem   -filter-inactive
 rem     Filter only not "active" workflows.
+
+rem -+:
+rem   Separator to begin flags scope to parse.
+rem --:
+rem   Separator to end flags scope to parse.
+rem   Required if `-+` is used.
+rem   If `-+` is used, then must be used the same quantity of times.
+:DOC_END
 
 setlocal DISABLEDELAYEDEXPANSION
 
@@ -37,6 +43,7 @@ exit /b %LAST_ERROR%
 
 :MAIN
 rem script flags
+set FLAG_FLAGS_SCOPE=0
 set FLAG_SKIP_SORT=0
 set FLAG_NO_PATH_PREFIX_REMOVE=0
 set FLAG_PRINT_OWNER_REPO_PREFIX=0
@@ -50,6 +57,9 @@ set "FLAG=%~1"
 if defined FLAG ^
 if not "%FLAG:~0,1%" == "-" set "FLAG="
 
+if defined FLAG if "%FLAG%" == "-+" set /A FLAG_FLAGS_SCOPE+=1
+if defined FLAG if "%FLAG%" == "--" set /A FLAG_FLAGS_SCOPE-=1
+
 if defined FLAG (
   if "%FLAG%" == "-skip-sort" (
     set FLAG_SKIP_SORT=1
@@ -59,7 +69,7 @@ if defined FLAG (
     set FLAG_PRINT_OWNER_REPO_PREFIX=1
   ) else if "%FLAG%" == "-filter-inactive" (
     set FLAG_FILTER_INACTIVE=1
-  ) else if not "%FLAG%" == "--" (
+  ) else if not "%FLAG%" == "-+" if not "%FLAG%" == "--" (
     echo;%?~%: error: invalid flag: %FLAG%
     exit /b -255
   ) >&2
@@ -68,7 +78,14 @@ if defined FLAG (
 
   rem read until no flags
   if not "%FLAG%" == "--" goto FLAGS_LOOP
+
+  if %FLAG_FLAGS_SCOPE% GTR 0 goto FLAGS_LOOP
 )
+
+if %FLAG_FLAGS_SCOPE% GTR 0 (
+  echo;%?~%: error: not ended flags scope: [%FLAG_FLAGS_SCOPE%]: %FLAG%
+  exit /b -255
+) >&2
 
 set "INOUT_LIST_FILE_TMP0=%SCRIPT_TEMP_CURRENT_DIR%\inout0.lst"
 set "INOUT_LIST_FILE_TMP1=%SCRIPT_TEMP_CURRENT_DIR%\inout1.lst"

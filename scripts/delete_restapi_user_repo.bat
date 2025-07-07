@@ -1,19 +1,19 @@
-@echo off
+@echo off & goto DOC_END
 
 rem USAGE:
-rem   delete_restapi_user_repo.bat [<Flags>] [--] <OWNER> <REPO>
+rem   delete_restapi_user_repo.bat [--] <OWNER> <REPO>
 
 rem Description:
 rem   Script to delete a repository using restapi.
 
-rem <Flags>:
-rem   --
-rem     Stop flags parse.
+rem --:
+rem   Stop flags parse.
 
 rem <OWNER>:
 rem   Owner name of a repository.
 rem <REPO>:
 rem   Repository name.
+:DOC_END
 
 setlocal
 

@@ -1,20 +1,20 @@
-@echo off
+@echo off & goto DOC_END
 
 rem USAGE:
-rem   backup_restapi_repo_info.bat [<Flags>] [--] <OWNER> <REPO>
+rem   backup_restapi_repo_info.bat [--] <OWNER> <REPO>
 
 rem Description:
 rem   Script to request restapi response of repository information (including
 rem   parent repository address) from a user repository.
 
-rem <Flags>:
-rem   --
-rem     Stop flags parse.
+rem --:
+rem   Stop flags parse.
 
 rem <OWNER>:
 rem   Owner name of a repository.
 rem <REPO>:
 rem   Repository name.
+:DOC_END
 
 setlocal
 

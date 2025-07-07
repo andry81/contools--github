@@ -1,14 +1,13 @@
-@echo off
+@echo off & goto DOC_END
 
 rem USAGE:
-rem   enable_restapi_repo_workflow.bat [<Flags>] [--] <OWNER> <REPO> <WORKFLOW_ID>
+rem   enable_restapi_repo_workflow.bat [--] <OWNER> <REPO> <WORKFLOW_ID>
 
 rem Description:
 rem   Script to enable a user repository workflow using restapi request.
 
-rem <Flags>:
-rem   --
-rem     Stop flags parse.
+rem --:
+rem   Stop flags parse.
 
 rem <OWNER>:
 rem   Owner name of a repository.
@@ -20,6 +19,7 @@ rem   string.
 
 rem GitHub Workflow documentation:
 rem   https://docs.github.com/en/rest/actions/workflows
+:DOC_END
 
 setlocal
 

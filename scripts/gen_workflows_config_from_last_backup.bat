@@ -87,8 +87,8 @@ if %FLAG_FILTER_INACTIVE% EQU 0 (
   for /F "tokens=* delims="eol^= %%i in ("%GEN_FILE_COMMENT_LINE%") do echo;%%i
   echo;
 
-  call "%%?~dp0%%print_repo_workflows_from_last_backup_by_config.bat"%%BARE_FLAGS%% -print-owner-repo-prefix -- "repos-auth-with-workflows.lst"
+  call "%%?~dp0%%print_repo_workflows_from_last_backup_by_config.bat" -+%%BARE_FLAGS%% -print-owner-repo-prefix -- "repos-auth-with-workflows.lst"
   echo;
 
-  call "%%?~dp0%%print_repo_workflows_from_last_backup_by_config.bat"%%BARE_FLAGS%% -print-owner-repo-prefix -- "repos-with-workflows.lst"
+  call "%%?~dp0%%print_repo_workflows_from_last_backup_by_config.bat" -+%%BARE_FLAGS%% -print-owner-repo-prefix -- "repos-with-workflows.lst"
 ) > "%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/gen/workflows%GEN_FILE_NAME_SUFFIX%.lst"
