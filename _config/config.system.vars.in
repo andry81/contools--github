@@ -66,6 +66,10 @@ GH_RESTAPI_DELETE_REPO_URL        =https://api.github.com/repos/{{OWNER}}/{{REPO
 GH_RESTAPI_USER_REPO_ENABLE_WORKFLOW_URL  =https://api.github.com/repos/{{OWNER}}/{{REPO}}/actions/workflows/{{WORKFLOW_ID}}/enable
 GH_RESTAPI_USER_REPO_ENABLE_WORKFLOW_FILE =repo-enable-workflow-{{PAGE}}.json
 
+# to request user repo workflow disable
+GH_RESTAPI_USER_REPO_DISABLE_WORKFLOW_URL  =https://api.github.com/repos/{{OWNER}}/{{REPO}}/actions/workflows/{{WORKFLOW_ID}}/disable
+GH_RESTAPI_USER_REPO_DISABLE_WORKFLOW_FILE =repo-disable-workflow-{{PAGE}}.json
+
 
 GH_BACKUP_CHECKOUTED_REPO_FILE_NAME        =checkouted-repo--[{{OWNER}}][{{REPO}}]--{{DATE_TIME}}
 GH_BACKUP_CHECKOUTED_AUTH_REPO_FILE_NAME   =checkouted-auth-repo--[{{OWNER}}][{{REPO}}]--{{DATE_TIME}}

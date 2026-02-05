@@ -1,3 +1,7 @@
+2026.02.05:
+* new: _config, scripts/disable_restapi_*workflow.bat: scripts to disable workflows
+* changed: __init__.bat: minor refactor
+
 2025.07.07:
 * changed: *.bat: flag parse global code improvement, added `-+` flag to begin flags scope
 
