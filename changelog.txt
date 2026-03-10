@@ -1,3 +1,6 @@
+2026.03.10:
+* changed: _config: `INIT_VERBOSE`, `CONTOOLS_VERBOSE`, `PRINT_VARS_SET`, `CHCP` global environment variables initialization is moved into `contools` project
+
 2026.03.02:
 * fixed: _externals: missed to remove git modules in the cache using `git rm -r --cache _externals`
 
