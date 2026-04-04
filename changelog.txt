@@ -217,6 +217,7 @@
 * new: Scripts/Tools/ToolAdaptors/app/github/backup_restapi_all_user_repos_list.bat: added script to backup all repository lists from all user accounts
 * new: Scripts/Tools/ToolAdaptors/app/github/backup_restapi_all_org_repos_list.bat: added script to backup all repository lists from all user organization accounts
 * new: Scripts/Tools/ToolAdaptors/app/github/backup_restapi_all_exclude_repos_list.bat: added script to backup all except user and organization repository lists
+* changed: Scripts/Tools/ToolAdaptors/app/github/backup_*.bat: added usage description
 
 2023.02.13:
 * fixed: Scripts/Tools/ToolAdaptors/app/github/__init__/__init__.bat: missed output files generation
