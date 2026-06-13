@@ -23,7 +23,7 @@ rem   https://docs.github.com/en/rest/actions/workflows
 
 setlocal
 
-call "%%~dp0../__init__/script_init.bat" workflow restapi %%0 %%* || exit /b
+call "%%~dp0__init__\script_init.bat" workflow restapi %%0 %%* || exit /b
 if %IMPL_MODE%0 EQU 0 exit /b
 
 if defined GH_RESTAPI_WORKFLOW_ENABLE_USE_TIMEOUT_MS call "%%CONTOOLS_ROOT%%/std/sleep.bat" "%%GH_RESTAPI_WORKFLOW_ENABLE_USE_TIMEOUT_MS%%"
