@@ -26,6 +26,9 @@
 #                         Can start by the `"` quote character, but two quotes does remove only when exist on both ends of a value.
 #
 
+GH_RESTAPI_USER_CRED_PROBE_URL    =https://api.github.com
+GH_RESTAPI_USER_CRED_PROBE_FILE   =probe-user-cred-{{PAGE}}.txt
+
 GH_RESTAPI_AUTH_USER_REPOS_URL    =https://api.github.com/user/repos
 GH_RESTAPI_AUTH_USER_REPOS_FILE   =repos-{{TYPE}}-{{PAGE}}.json
 
@@ -70,6 +73,8 @@ GH_RESTAPI_USER_REPO_ENABLE_WORKFLOW_FILE =repo-enable-workflow-{{PAGE}}.json
 GH_RESTAPI_USER_REPO_DISABLE_WORKFLOW_URL  =https://api.github.com/repos/{{OWNER}}/{{REPO}}/actions/workflows/{{WORKFLOW_ID}}/disable
 GH_RESTAPI_USER_REPO_DISABLE_WORKFLOW_FILE =repo-disable-workflow-{{PAGE}}.json
 
+
+GH_PROBE_RESTAPI_USER_CRED_FILE_NAME       =probe-user-cred--[{{USER}}]--{{DATE_TIME}}
 
 GH_BACKUP_CHECKOUTED_REPO_FILE_NAME        =checkouted-repo--[{{OWNER}}][{{REPO}}]--{{DATE_TIME}}
 GH_BACKUP_CHECKOUTED_AUTH_REPO_FILE_NAME   =checkouted-auth-repo--[{{OWNER}}][{{REPO}}]--{{DATE_TIME}}

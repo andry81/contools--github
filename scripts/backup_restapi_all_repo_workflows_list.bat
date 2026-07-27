@@ -32,6 +32,8 @@ if %IMPL_MODE%0 EQU 0 exit /b
 
 call "%%CONTOOLS_ROOT%%/std/allocate_temp_dir.bat" . "%%?~n0%%" || exit /b
 
+set "EXEC_ON_ENDLOCAL="
+
 call :MAIN %%*
 set LAST_ERROR=%ERRORLEVEL%
 
@@ -41,7 +43,11 @@ call "%%CONTOOLS_ROOT%%/std/free_temp_dir.bat"
 
 set /A NEST_LVL-=1
 
-exit /b %LAST_ERROR%
+(
+  endlocal
+  %EXEC_ON_ENDLOCAL%
+  exit /b %LAST_ERROR%
+)
 
 :MAIN
 pushd "%?~dp0%" && (
@@ -112,6 +118,16 @@ if defined FROM_CMD (
 if %HAS_AUTH_USER% EQU 0 goto SKIP_AUTH_USER
 
 rem required authentication
+
+rem cast to integer
+set /A AUTH_USER_CRED_PROBED+=0
+
+rem probe the auth user credentials
+if %AUTH_USER_CRED_PROBED% EQU 0 (
+  set AUTH_USER_CRED_PROBED=1
+  call "%%CONTOOLS_ROOT%%/std/set_var_as_cmdline.bat" EXEC_ON_ENDLOCAL AUTH_USER_CRED_PROBED
+  call "%%?~dp0%%probe_restapi_user_cred.bat" "%%GH_AUTH_USER%%" "%%GH_AUTH_PASS%" || exit /b
+)
 
 for /F "usebackq eol=# tokens=1,* delims=/" %%i in ("%CONTOOLS_GITHUB_PROJECT_OUTPUT_CONFIG_ROOT%/repos-auth-with-workflows.lst") do (
   set "REPO_OWNER=%%i"

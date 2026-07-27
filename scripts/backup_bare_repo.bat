@@ -122,6 +122,11 @@ if defined FLAG_TEMP_DIR (
   )
 )
 
+rem CAUTION:
+rem   The `TEMP_DIR` variable must has an absolute path to avoid error: `System ERROR: The system cannot find the path specified.`,
+rem   because `add_files_to_archive.bat` does switch to a directory to archive and all relative paths would be incorrect!
+call "%%CONTOOLS_ROOT%%/std/canonical_path.bat" TEMP_DIR "%%TEMP_DIR%%"
+
 if defined FLAG_TEMP_DIR (
   set "GH_BACKUP_TEMP_DIR=%TEMP_DIR%\backup\bare"
   set _7ZIP_BARE_FLAGS=%_7ZIP_BARE_FLAGS% -w"%TEMP_DIR%"
@@ -180,7 +185,7 @@ call set "GH_BACKUP_BARE_REPO_FILE=%%GH_BACKUP_BARE_REPO_FILE:{{REPO}}=%REPO%%%"
 call set "GH_BACKUP_BARE_REPO_FILE=%%GH_BACKUP_BARE_REPO_FILE:{{DATE_TIME}}=%PROJECT_LOG_FILE_NAME_DATE_TIME%%%"
 
 echo;Archiving backup directory...
-call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_BACKUP_OUTPUT_DIR%%" && ^
+call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_BACKUP_OUTPUT_DIR%%" || exit /b
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_BACKUP_TEMP_DIR%%" "*" "%%GH_BACKUP_OUTPUT_DIR%%/%%GH_BACKUP_BARE_REPO_FILE%%.7z" -sdel%%_7ZIP_BARE_FLAGS%%
 set LAST_ERROR=%ERRORLEVEL%
 

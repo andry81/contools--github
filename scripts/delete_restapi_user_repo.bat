@@ -22,6 +22,8 @@ if %IMPL_MODE%0 EQU 0 exit /b
 
 rem call "%%CONTOOLS_ROOT%%/std/allocate_temp_dir.bat" . "%%?~n0%%" || exit /b
 
+set "EXEC_ON_ENDLOCAL="
+
 call :MAIN %%*
 set LAST_ERROR=%ERRORLEVEL%
 
@@ -31,7 +33,11 @@ rem call "%%CONTOOLS_ROOT%%/std/free_temp_dir.bat"
 
 set /A NEST_LVL-=1
 
-exit /b %LAST_ERROR%
+(
+  endlocal
+  %EXEC_ON_ENDLOCAL%
+  exit /b %LAST_ERROR%
+)
 
 :MAIN
 rem script flags
@@ -81,6 +87,16 @@ if %HAS_AUTH_USER% EQU 0 (
   echo;%?~%: error: GH_AUTH_USER or GH_AUTH_PASS_TO_DELETE is not defined.
   exit /b 255
 ) >&2
+
+rem cast to integer
+set /A AUTH_USER_CRED_PROBED+=0
+
+rem probe the auth user credentials
+if %AUTH_USER_CRED_PROBED% EQU 0 (
+  set AUTH_USER_CRED_PROBED=1
+  call "%%CONTOOLS_ROOT%%/std/set_var_as_cmdline.bat" EXEC_ON_ENDLOCAL AUTH_USER_CRED_PROBED
+  call "%%?~dp0%%probe_restapi_user_cred.bat" "%%GH_AUTH_USER%%" "%%GH_AUTH_PASS_TO_DELETE%%" || exit /b
+)
 
 call set "GH_RESTAPI_DELETE_REPO_URL=%%GH_RESTAPI_DELETE_REPO_URL:{{OWNER}}=%OWNER%%%"
 call set "GH_RESTAPI_DELETE_REPO_URL=%%GH_RESTAPI_DELETE_REPO_URL:{{REPO}}=%REPO%%%"

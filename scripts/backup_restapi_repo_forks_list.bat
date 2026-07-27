@@ -25,6 +25,8 @@ if defined GH_RESTAPI_BACKUP_USE_TIMEOUT_MS call "%%CONTOOLS_ROOT%%/std/sleep.ba
 
 call "%%CONTOOLS_ROOT%%/std/allocate_temp_dir.bat" . "%%?~n0%%" || exit /b
 
+set "EXEC_ON_ENDLOCAL="
+
 call :MAIN %%*
 set LAST_ERROR=%ERRORLEVEL%
 
@@ -34,7 +36,11 @@ call "%%CONTOOLS_ROOT%%/std/free_temp_dir.bat"
 
 set /A NEST_LVL-=1
 
-exit /b %LAST_ERROR%
+(
+  endlocal
+  %EXEC_ON_ENDLOCAL%
+  exit /b %LAST_ERROR%
+)
 
 :MAIN
 rem script flags
@@ -71,6 +77,26 @@ if not defined REPO (
   echo;%?~%: error: REPO is not defined.
   exit /b 255
 ) >&2
+
+set HAS_AUTH_USER=0
+
+if defined GH_AUTH_USER if not "%GH_AUTH_USER%" == "{{USER}}" ^
+if defined GH_AUTH_PASS if not "%GH_AUTH_PASS%" == "{{PASS}}" set HAS_AUTH_USER=1
+
+if %HAS_AUTH_USER% EQU 0 (
+  echo;%?~%: error: GH_AUTH_USER or GH_AUTH_PASS is not defined.
+  exit /b 255
+) >&2
+
+rem cast to integer
+set /A AUTH_USER_CRED_PROBED+=0
+
+rem probe the auth user credentials
+if %AUTH_USER_CRED_PROBED% EQU 0 (
+  set AUTH_USER_CRED_PROBED=1
+  call "%%CONTOOLS_ROOT%%/std/set_var_as_cmdline.bat" EXEC_ON_ENDLOCAL AUTH_USER_CRED_PROBED
+  call "%%?~dp0%%probe_restapi_user_cred.bat" "%%GH_AUTH_USER%%" "%%GH_AUTH_PASS%" || exit /b
+)
 
 set "QUERY_TEMP_FILE=%SCRIPT_TEMP_CURRENT_DIR%\query.txt"
 
@@ -124,7 +150,7 @@ call set "GH_BACKUP_RESTAPI_REPO_FORKS_FILE=%%GH_BACKUP_RESTAPI_REPO_FORKS_FILE:
 call set "GH_BACKUP_RESTAPI_REPO_FORKS_FILE=%%GH_BACKUP_RESTAPI_REPO_FORKS_FILE:{{DATE_TIME}}=%PROJECT_LOG_FILE_NAME_DATE_TIME%%%"
 
 echo;Archiving backup directory...
-call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_BACKUP_OUTPUT_DIR%%" && ^
+call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/mkdir_if_notexist.bat" "%%GH_BACKUP_OUTPUT_DIR%%" || exit /b
 call "%%CONTOOLS_BUILD_TOOLS_ROOT%%/add_files_to_archive.bat" "%%GH_BACKUP_TEMP_DIR%%" "*" "%%GH_BACKUP_OUTPUT_DIR%%/%%GH_BACKUP_RESTAPI_REPO_FORKS_FILE%%.7z" -sdel%%_7ZIP_BARE_FLAGS%% || exit /b 20
 echo;
 

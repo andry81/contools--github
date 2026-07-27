@@ -1,3 +1,9 @@
+2026.07.27:
+* fixed: scripts/*.bat: `TEMP_DIR` variable must has an absolute path to avoid error: `System ERROR: The system cannot find the path specified.`
+* fixed: *.bat: execution fixup
+* new: _config, scripts/probe_restapi_user_cred.bat: script to probe a user credentials
+* changed: scripts/*.bat: probe a user credentials before query a request with a user authentication
+
 2026.06.13:
 * new: scripts/__init__/script_init.bat: to use local `__init__` before a parent directory `__init__`
 * fixed: scripts/*.bat: scripts initialization fixup

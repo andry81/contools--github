@@ -29,6 +29,7 @@
 once CURL_EXECUTABLE                            ="c:\cygwin\bin\curl.exe"
 once JQ_EXECUTABLE                              ="c:\cygwin\bin\jq.exe"
 
+once GH_PROBE_DIR                               ="%PROJECT_OUTPUT_ROOT%/probe"
 once GH_BACKUP_DIR                              ="%PROJECT_OUTPUT_ROOT%/backup"
 once GH_WORKFLOW_DIR                            ="%PROJECT_OUTPUT_ROOT%/workflow"
 
